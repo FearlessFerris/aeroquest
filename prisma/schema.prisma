@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  name      String?
+  imageUrl  String?  // profile image url (S3 later)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  favorites Favorite[]
+}
+
+model Favorite {
+  id        String       @id @default(cuid())
+  userId    String
+  entity    FavoriteType
+  entityId  String       // the ID of the thing they favorited (Airport/Aircraft/etc)
+  createdAt DateTime     @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@unique([userId, entity, entityId])
+}
+
+enum FavoriteType {
+  AIRPORT
+  AIRLINE
+  AIRCRAFT
+  FLIGHT
+}
+
+model Airport {
+  id        String   @id @default(cuid())
+  iata      String?  @db.VarChar(3)
+  icao      String?  @db.VarChar(4)
+  name      String?
+  city      String?
+  country   String?
+  lat       Float?
+  lon       Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([iata])
+  @@index([icao])
+}
+
+model Airline {
+  id        String   @id @default(cuid())
+  iata      String?  @db.VarChar(2)
+  icao      String?  @db.VarChar(3)
+  name      String?
+  country   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([iata])
+  @@index([icao])
+}
+
+model Aircraft {
+  id        String   @id @default(cuid())
+  iata      String?  @db.VarChar(3)
+  icao      String?  @db.VarChar(4)
+  model     String?
+  manufacturer String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([iata])
+  @@index([icao])
+}
