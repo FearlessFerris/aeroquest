@@ -7,6 +7,7 @@ import { signIn } from '@/lib/auth';
 
 
 // Components & Necessary Files
+import FormRender from '@/components/forms/FormRender';
 
 
 // Login Component
@@ -38,6 +39,7 @@ export default function LoginPage() {
             >
                 Login
             </Typography>
+            <FormRender />
             <form
                 action={async () => {
                     'use server';
