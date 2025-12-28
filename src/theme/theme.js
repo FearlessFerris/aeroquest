@@ -12,7 +12,7 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     mode: 'dark',
-    primary: { main: '#ab003c' },
+    primary: { main: '#ab003cff' },
     background: {
       default: '#021012',
       paper: '#0b0f14',
@@ -22,7 +22,7 @@ const theme = createTheme({
       secondary: '#c7c7c7',
     },
   },
-  shape: { borderRadius: 16 },
+  // shape: { borderRadius: 16 },
   typography: {
     fontFamily: [
       'system-ui',
@@ -38,7 +38,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 16,
+          // borderRadius: 16,
           textTransform: 'none',
           fontWeight: 700,
         },
