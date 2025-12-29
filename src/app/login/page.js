@@ -7,7 +7,7 @@ import { signIn } from '@/lib/auth';
 
 
 // Components & Necessary Files
-import FormRender from '@/components/forms/FormRender';
+import RHFFormExample from '@/components/forms/examples/RHFFormExample';
 
 
 // Login Component
@@ -39,7 +39,7 @@ export default function LoginPage() {
             >
                 Login
             </Typography>
-            <FormRender />
+            <RHFFormExample />
             <form
                 action={async () => {
                     'use server';
