@@ -30,12 +30,13 @@ export default function RHFTextField({
         <Controller
             control={control}
             name={name}
+            label={label}
             rules={rules}
             render={({ field }) => (
                 <TextField
                     {...field}
                     label={label}
-                    error={showError}
+                    // error={showError}
                     helperText={fieldError?.message ?? helperText ?? ' '}
                     {...textFieldProps}
                 />
