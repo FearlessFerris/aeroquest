@@ -3,7 +3,8 @@
 
 
 // Dependencies 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Divider, Typography } from '@mui/material';
+import LoginIcon from '@mui/icons-material/Login';
 import { useForm } from 'react-hook-form';
 
 
@@ -13,41 +14,59 @@ import RHFFormTextField from "../fields/RHFFormTextField";
 import RHFFormSubmitButton from "../RHFFormSubmitButton";
 
 
+
 // Login Form Component
-export default function RHFLoginForm(){
+export default function RHFLoginForm() {
 
     const methods = useForm({
         mode: 'onTouched'
     });
 
-    const { getValues } = methods; 
+    const { getValues } = methods;
 
-    const onSubmit = async (data) => { 
+    const onSubmit = async (data) => {
         console.log('Submitted:', data);
     }
 
-    return( 
+    return (
         <RHFForm
             methods={methods}
             onSubmit={onSubmit}
         >
-            <Box> 
+            <Box>
                 <RHFFormTextField
                     name='username'
                     label='Username'
                     fullWidth
-                    rules={{ 
+                    rules={{
                         required: 'Please enter a valid Username',
                     }}
                 />
                 <RHFFormTextField
                     name='password'
-                    label='Password' 
+                    label='Password'
                     fullWidth
-                    rules={{ 
+                    rules={{
                         required: 'Please enter a valid Password',
                     }}
+                    type='password'
                 />
+                <Box
+                    sx={{
+                        marginTop: '3rem'
+                    }}
+                >
+                    <RHFFormSubmitButton
+                        variant='contained'
+                        startIcon={<LoginIcon />}
+                        sx={{
+                            fontSize: '1rem',
+                            width: '12.5rem'
+                        }}
+                    >
+                        Login
+                    </RHFFormSubmitButton>
+                </Box>
             </Box>
         </RHFForm>
     )

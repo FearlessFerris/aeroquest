@@ -3,89 +3,88 @@
 
 // Dependencies 
 import { Box, Typography, Button } from '@mui/material';
-import { signIn } from '@/lib/auth';
-import { motion } from 'motion/react';
+import GoogleIcon from '@mui/icons-material/Google';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 
 // Components & Necessary Files
 import RHFLoginForm from '@/components/forms/examples/RHFLoginForm';
 import { googleSignIn, githubSignIn } from './actions';
+import MotionBox from '@/components/motion/MotionBox';
+import RHFFormSubmitButton from '@/components/forms/RHFFormSubmitButton';
 
 
 // Login Component
 export default function LoginPage() {
 
-   const MotionBox = motion.div;
 
 
-   return (
-    <Box
-        sx={{
-            display: 'grid',
-            minHeight: '100vh',
-            placeItems: 'center',
-            textAlign: 'center'
-        }}
-    >
-        <MotionBox 
-            initial={{ opacity: 0, y: 18, filter: 'blur(6px)' }}
-  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        >
-
+    return (
         <Box
             sx={{
-                width: 'min(32rem, 92vw)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1rem',
-                p: '2rem',
-                borderRadius: '2rem',
-                backdropFilter: 'blur(14px)',
-                background: 'rgba(10, 20, 24, 0.55)',
-                border: '1px solid rgba(255,255,255,0.10)',
+                display: 'grid',
+                minHeight: '100vh',
+                placeItems: 'center',
+                textAlign: 'center'
             }}
-            >
-            <Typography
-                variant='h1'
-                sx={{
-                    fontWeight: '700',
-                    margin: '2rem'
-                }}
-                >
-                Login
-            </Typography>
-            <RHFLoginForm />
-            <form
-                action={googleSignIn}
-                >
-                <Button
-                    type='submit'
-                    variant='contained'
+        >
+            <MotionBox>
+
+                <Box
                     sx={{
-                        fontSize: '1rem',
-                        width: 'auto'
+                        width: 'min(32rem, 92vw)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '1rem',
+                        p: '2rem',
+                        borderRadius: '2rem',
+                        background: 'rgba(2, 10, 12, 0.90)',
+                        backdropFilter: 'blur(14px)',
+                        border: '1px solid rgba(255,255,255,0.10)',
                     }}
-                    >
-                    Sign in with Google
-                </Button>
-            </form>
-            <form
-                action={githubSignIn}
                 >
-                <Button
-                    type='submit'
-                    variant='contained'
-                    sx={{
-                        fontSize: '1rem',
-                        width: 'auto'
-                    }}
+                    <Typography
+                        variant='h1'
+                        sx={{
+                            fontWeight: '700',
+                            margin: '2rem'
+                        }}
                     >
-                    Sign in with GitHub
-                </Button>
-            </form>
+                        Login
+                    </Typography>
+                    <RHFLoginForm />
+                    <form
+                        action={googleSignIn}
+                    >
+                        <RHFFormSubmitButton
+                            type='submit'
+                            variant='contained'
+                            startIcon={<GoogleIcon />}
+                            sx={{
+                                fontSize: '1rem',
+                                width: 'auto'
+                            }}
+                        >
+                            Sign in with Google
+                        </RHFFormSubmitButton>
+                    </form>
+                    <form
+                        action={githubSignIn}
+                    >
+                        <RHFFormSubmitButton
+                            type='submit'
+                            variant='contained'
+                            sx={{
+                                fontSize: '1rem',
+                                width: 'auto'
+                            }}
+                            startIcon={<GitHubIcon />}
+                        >
+                            Sign in with GitHub
+                        </RHFFormSubmitButton>
+                    </form>
+                </Box>
+            </MotionBox>
         </Box>
-                    </MotionBox>
-    </Box>
-)
+    )
 }
