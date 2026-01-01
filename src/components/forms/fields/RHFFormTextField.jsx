@@ -5,7 +5,7 @@
 // Dependencies 
 import { TextField } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
-import InputAdornment from '@mui/material';
+import { InputAdornment } from '@mui/material';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 
@@ -22,32 +22,58 @@ export default function RHFTextField({
     name,
     label, 
     rules, 
-    helperText, 
+    helperText,
+    sanitize, 
     ...textFieldProps
 }) {
     const {
         control, 
         watch,
-        formState: {errors, touchFields}} = useFormContext();
+        formState: {errors, touchedFields}} = useFormContext();
     const fieldError = getError(errors, name);
-    const showError = Boolean(fieldError);
-    
     const value = watch(name);
-    const isTouched = Boolean(touchFields?.[name]);
+    const isTouched = Boolean(touchedFields?.[name]);
+    const hasError = Boolean(fieldError);
+    const isFilled = String(value ?? '').length > 0;
+    const showSuccess = isTouched && isFilled && !hasError;
+    const showError = isTouched && hasError;
+    const adornmentIcon = showSuccess ? ( 
+        <CheckCircleRoundedIcon 
+            sx={{ 
+                color: '#fafafa',
+                fontSize: '1.2rem'
+            }}
+        />
+    ):showError ? (
+        <ErrorRoundedIcon 
+            sx={{
+                color: '#ab003c',
+                fontSize: '1.25rem'
+            }}
+        />
+    ):null;
 
     return(
         <Controller
             control={control}
             name={name}
-            label={label}
             rules={rules}
             render={({ field }) => (
                 <TextField
                     {...field}
                     label={label}
-                    // error={showError}
+                    error={showError}
                     helperText={fieldError?.message ?? helperText ?? ' '}
                     {...textFieldProps}
+                    onChange={(e) => {
+                        const next = sanitize ? sanitize(e.target.value) : e.target.value;
+                        field.onChange(next);
+                    }}
+                    InputProps={{
+                    endAdornment: adornmentIcon ? (
+                      <InputAdornment position="end">{adornmentIcon}</InputAdornment>
+                    ) : null,
+                  }}
                 />
             )}
         />
