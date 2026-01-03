@@ -129,7 +129,7 @@ export default function LoginPage() {
                         flexDirection: 'column',
                         gap: '1rem',
                         p: '2rem',
-                        borderRadius: '2rem',
+                        borderRadius: '1rem',
                         background: 'rgba(2, 10, 12, 0.90)',
                         backdropFilter: 'blur(14px)',
                         border: '1px solid rgba(255,255,255,0.10)',
@@ -158,7 +158,7 @@ export default function LoginPage() {
                                     hoverIcon={<GoogleLogo size={20} />}
                                 />
                             }
-                            sx={{ ...buttonSx, fontSize: '1rem', width: '14rem' }}
+                            sx={{ ...buttonSx, fontSize: '1rem', width: '23rem' }}
                         >
                             Sign in with Google
                         </RHFFormSubmitButton>
@@ -176,7 +176,7 @@ export default function LoginPage() {
                                     hoverIcon={<GitHubIcon sx={{ fontSize: '20px', color: '#ffffff' }} />}
                                 />
                             }
-                            sx={{ ...buttonSx, fontSize: '1rem', width: '14rem' }}
+                            sx={{ ...buttonSx, fontSize: '1rem', width: '23rem' }}
                         >
                             Sign in with GitHub
                         </RHFFormSubmitButton>

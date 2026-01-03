@@ -3,7 +3,7 @@
 
 
 // Dependencies 
-import { Box, Button, Divider, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Divider, Typography } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import { useForm } from 'react-hook-form';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -14,6 +14,7 @@ import RHFForm from "../RHFForm";
 import RHFFormTextField from "../fields/RHFFormTextField";
 import RHFFormSubmitButton from "../RHFFormSubmitButton";
 import RHFFormAuthLinkButtons from '../RHFFormAuthLinkButtons';
+import RHFFormCheckbox from '../fields/RHFFormCheckbox';
 
 
 
@@ -27,6 +28,7 @@ export default function RHFLoginForm() {
         defaultValues: {
             username: '',
             password: '',
+            rememberMe: false,
         },
     });
 
@@ -81,9 +83,8 @@ export default function RHFLoginForm() {
                                 transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                                 sx={{
                                     color: 'rgba(250,250,250,0.82)',
-                                    fontSize: '1.5rem',
+                                    fontSize: '1.3rem',
                                     fontWeight: 600,
-                                    letterSpacing: '0.01em',
                                     marginBottom: '2rem',
                                 }}
                             >
@@ -99,7 +100,7 @@ export default function RHFLoginForm() {
                     rules={{
                         required: 'Please enter a valid Username',
                         minLength: { value: 8, message: 'Minimum 8 characters' },
-                        maxLength: { value: 30, message: 'Maximum 30 characters' },
+                        maxLength: { value: 23, message: 'Maximum 23 characters' },
                         pattern: {
                             value: /^[a-zA-Z0-9_]+$/,
                             message: 'Only letters, numbers, and underscores',
@@ -109,7 +110,7 @@ export default function RHFLoginForm() {
                         value
                             .replace(/\s+/g, '')
                             .replace(/[^a-zA-Z0-9_]/g, '')
-                            .slice(0, 30)
+                            .slice(0, 23)
                     }           
                 />
                 <RHFFormTextField
@@ -126,6 +127,12 @@ export default function RHFLoginForm() {
                         alignItems: 'center'
                     }}
                 />
+                <Box> 
+                    <RHFFormCheckbox
+                        name='rememberMe'
+                        label='Remember Me'
+                    />
+                </Box>
                 <RHFFormAuthLinkButtons />
                 <Box
                     sx={{
@@ -137,7 +144,7 @@ export default function RHFLoginForm() {
                         startIcon={<LoginIcon />}
                         sx={{
                             fontSize: '1rem',
-                            width: '14rem'
+                            width: '23rem'
                         }}
                     >
                         Login

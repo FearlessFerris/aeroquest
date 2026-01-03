@@ -29,20 +29,25 @@ export default function CreatePage(){
                     flexDirection: 'column',
                     gap: '1rem',
                     p: '2rem',
-                    borderRadius: '2rem',
+                    borderRadius: '1rem',
                     background: 'rgba(2, 10, 12, 0.90)',
                     backdropFilter: 'blur(14px)',
                     border: '1px solid rgba(255,255,255,0.10)',
                 }}
             > 
+                <Typography
+                    variant='h4'
+                > 
+                Aeroquest
+                </Typography>
                     <Typography
-                        variant='h1'
+                        variant='h3'
                         sx={{
                             fontWeight: '700',
                             margin: '2rem'
                         }}
                     >
-                        Create
+                        Sign Up
                     </Typography>
                 <RHFCreateForm />
             </Box>

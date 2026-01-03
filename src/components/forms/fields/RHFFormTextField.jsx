@@ -69,11 +69,13 @@ export default function RHFTextField({
                         const next = sanitize ? sanitize(e.target.value) : e.target.value;
                         field.onChange(next);
                     }}
-                    InputProps={{
-                    endAdornment: adornmentIcon ? (
-                      <InputAdornment position="end">{adornmentIcon}</InputAdornment>
-                    ) : null,
-                  }}
+                    slotProps={{
+                        input: {
+                            endAdornment: adornmentIcon ? (
+                                <InputAdornment position="end">{adornmentIcon}</InputAdornment>
+                            ) : null,
+                        }
+                    }}
                 />
             )}
         />
