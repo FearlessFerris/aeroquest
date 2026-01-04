@@ -37,8 +37,6 @@ export default async function HomePage() {
                 gap: '1rem'
             }}
         >
-
-
             <Typography>
                 Signed in as {session.user?.email}
             </Typography>
