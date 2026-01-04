@@ -3,7 +3,7 @@
 
 // Dependencies 
 import Link from 'next/link';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 
 
 // Components & Necessary Files 
@@ -16,38 +16,36 @@ export default function RHFFormAuthLinkButtons() {
 
   return (
     <Box
-  sx={{
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    px: '1.1rem',
-    mt: '0.25rem',
-    mb: '0.6rem',
-  }}
->
-  <RHFFormSubmitButton
-    component={Link}
-    href="/user/forgot-password"
-    variant="contained"
-    sx={{ 
-      width: '11rem'
-    }}
-  >
-    Forgot password?
-  </RHFFormSubmitButton>
-
-  <RHFFormSubmitButton
-    component={Link}
-    href="/user/register"
-    variant="contained"
-    sx={{ 
-      width: '11rem'
-    }}
-  >
-    Create account
-  </RHFFormSubmitButton>
-</Box>
-
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        px: '1.1rem',
+        mt: '0.25rem',
+        mb: '0.6rem',
+      }}
+    >
+      <RHFFormSubmitButton
+        component={Link}
+        href="/user/forgot-password"
+        variant="contained"
+        sx={{ 
+          width: '11rem'
+        }}
+      >
+        Forgot password?
+      </RHFFormSubmitButton>
+      <RHFFormSubmitButton
+        component={Link}
+        href="/user/register"
+        variant="contained"
+        sx={{ 
+          width: '11rem'
+        }}
+      >
+        Create account
+      </RHFFormSubmitButton>
+    </Box>
   );
 }
 

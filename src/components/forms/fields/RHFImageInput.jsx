@@ -100,13 +100,25 @@ export default function RHFImageInput({
                                 }}
                             />
                         </RHFFormSubmitButton>
-                         <Typography sx={{ fontSize: '0.95rem', color: 'rgba(250,250,250,0.70)', textAlign: 'center' }}>
-              {field.value?.name ? `Selected: ${field.value.name}` : 'No file selected'}
-            </Typography>
-
-            <Typography sx={{ minHeight: '1.25rem', fontSize: '0.9rem', textAlign: 'center', color: '#ab003c' }}>
-              {fieldState.error?.message ?? ' '}
-            </Typography>
+                         <Typography 
+                            sx={{ 
+                                fontSize: '0.95rem', 
+                                color: 'rgba(250,250,250,0.70)', 
+                                textAlign: 'center' 
+                            }}
+                        >
+                        {field.value?.name ? `Selected: ${field.value.name}` : 'No file selected'}
+                        </Typography>
+                        <Typography 
+                            sx={{ 
+                                minHeight: '1.25rem', 
+                                fontSize: '0.9rem', 
+                                textAlign: 'center', 
+                                color: '#ab003c' 
+                            }}
+                        >
+                        {fieldState.error?.message ?? ' '}
+                        </Typography>
                     </Box>
                 )}
             />
