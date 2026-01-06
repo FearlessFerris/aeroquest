@@ -38,6 +38,12 @@ export default function RHFCreateForm() {
         methods.reset();
     }
 
+    const spacePrevention = (e) => { 
+        if(e.key === ' '){ 
+            e.preventDefault(); 
+        }
+    }
+
     const onSubmit = async (data) => {
         console.log('Submitted:', data);
         methods.reset();
@@ -47,22 +53,18 @@ export default function RHFCreateForm() {
         width: '3rem',
         height: '3rem',
         borderRadius: '0.85rem',
-
         background: 'rgba(250, 250, 250, 0.06)',
         color: '#fafafa',
         border: '1px solid rgba(250, 250, 250, 0.14)',
         boxShadow: '0 10px 26px rgba(0, 0, 0, 0.45)',
         backdropFilter: 'blur(10px)',
-
         transition: 'transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease',
-
         '&:hover': {
             background: 'rgba(171, 0, 60, 0.18)',
             borderColor: 'rgba(171, 0, 60, 0.40)',
             boxShadow: '0 14px 34px rgba(0, 0, 0, 0.58), 0 0 0 2px rgba(171, 0, 60, 0.12)',
             transform: 'translateY(-1px) rotate(90deg)',
         },
-
         '&:active': {
             transform: 'scale(0.96)',
         },
@@ -88,13 +90,12 @@ export default function RHFCreateForm() {
                     >
                         <RefreshIcon sx={{ fontSize: '1.75rem' }} />
                     </IconButton>
-
-
                 </Box>
                 <RHFTextField
                     name="username"
                     label="Username"
                     fullWidth
+                    onKeyDown={(e) => spacePrevention(e)}
                     placeholder="JavarisJamarJavarisonLamar"
                     rules={{
                         required: 'Username is required',
@@ -116,10 +117,15 @@ export default function RHFCreateForm() {
                     name="password"
                     label="Password"
                     fullWidth
+                    onKeyDown={(e) => spacePrevention(e)}
                     placeholder="...not password123"
                     rules={{
                         required: 'Password is required',
                         minLength: { value: 8, message: 'Minimum 8 characters' },
+                        pattern: {
+                                value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
+                                message: "Include 1 uppercase letter, 1 number, and 1 symbol"
+                                },
                         validate: (v) => (!/\s/.test(v) ? true : 'No spaces allowed'),
                     }}
                     type="password"
@@ -128,6 +134,7 @@ export default function RHFCreateForm() {
                     name="confirmPassword"
                     label="Confirm Password"
                     fullWidth
+                    onKeyDown={(e) => spacePrevention(e)}
                     placeholder="Just like the last one ⬆"
                     rules={{
                         required: 'Confirm Password is required',
@@ -139,6 +146,7 @@ export default function RHFCreateForm() {
                     name="email"
                     label="Email"
                     fullWidth
+                    onKeyDown={(e) => spacePrevention(e)}
                     placeholder="name@example.com"
                     rules={{
                         required: 'Email is required',
