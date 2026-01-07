@@ -1,55 +1,55 @@
 'use client';
-// GitHub Sign In Form Component Implementation 
+
+
+// GitHubSignInForm Component Implementation 
 
 
 // Dependencies 
+import { Box } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 
 
 // Components & Necessary Files 
-import RHFFormSubmitButton from "./RHFFormSubmitButton";
-import { githubSignIn } from "@/app/login/actions";
-import HoverSwapIcon from "../ui/HoverSwapIcon";
+import HoverSwapIcon from '../ui/HoverSwapIcon';
+import RHFFormSubmitButton from './RHFFormSubmitButton';
+import { githubSignIn } from '@/app/login/actions';
 
 
-
-// Google Sign In Component
-export default function GitHubSignInForm(){ 
-
-    return( 
-        <form
+// GitHubSignInForm Component
+export default function GitHubSignInForm() {
+    return (
+        <Box
+            component="form"
             action={githubSignIn}
-        > 
+            sx={{
+                width: '100%'
+            }}
+        >
             <RHFFormSubmitButton
-                type='submit'
+                type="submit"
+                variant="outlined"
+                fullWidth
                 startIcon={
                     <HoverSwapIcon
                         size={20}
                         defaultIcon={
                             <GitHubIcon
                                 sx={{
-                                    color: 'rgba(250,250,250,0.88)',
-                                    fontSize: '1.2rem',
-                                }}
-                            />
+                                    color: 'rgba(250,250,250,0.86)',
+                                    fontSize: '1.2rem'
+                                }} />
                         }
-                        hoverIcon={
-                            <GitHubIcon 
-                                sx={{ 
-                                    fontSize: '20px', 
-                                    color: '#ffffff' 
-                                }}
-                            />
-                        }
+                        hoverIcon={<GitHubIcon
+                            sx={{
+                                color: '#ffffff',
+                                fontSize: '1.2rem'
+                            }}
+                        />}
                     />
                 }
-                sx={{
-                    fontSize: '1rem',
-                    width: '23rem'
-                }}
-            > 
-            Sign in with Google
+            >
+                Continue with GitHub
             </RHFFormSubmitButton>
-        </form>
-    )
+        </Box>
+    );
 }

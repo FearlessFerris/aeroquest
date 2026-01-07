@@ -32,9 +32,9 @@ export default function CreatePage() {
                         gap: '1rem',
                         p: '2rem',
                         borderRadius: '1rem',
-                        background: 'rgba(2, 10, 12, 0.90)',
-                        backdropFilter: 'blur(14px)',
-                        border: '1px solid rgba(255,255,255,0.10)',
+                        // background: 'rgba(18, 19, 22, 1)',
+                        // // backdropFilter: 'blur(14px)',
+                        // border: '1px solid rgba(255,255,255,0.10)',
                     }}
                 >
                     <Typography

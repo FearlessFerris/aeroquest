@@ -2,26 +2,43 @@
 
 
 // Dependencies 
-import { createTheme } from '@mui/material/styles';
+import { createTheme, alpha } from '@mui/material/styles';
+
 
 
 // Components & Necessary Files 
 
 
 // Theme Implementation
+const TOKENS = {
+    bg: '#010607',
+    shell: 'rgba(6, 10, 12, 0.86)',
+    shell2: 'rgba(4, 8, 10, 0.78)',
+    border: 'rgba(250, 250, 250, 0.12)',
+    borderSoft: 'rgba(250, 250, 250, 0.08)',
+    text: 'rgba(250, 250, 250, 0.90)',
+    text2: 'rgba(250, 250, 250, 0.68)',
+    wheat: 'rgba(245, 233, 207, 0.92)',
+    glow: 'rgba(245, 206, 138, 0.92)',
+    glowSoft: 'rgba(245, 206, 138, 0.18)',
+    accent: '#ab003c',
+    error: '#ffffffff',
+};
+
 export const theme = createTheme({
     palette: {
         mode: 'dark',
-        primary: { main: '#ab003c' },
+        primary: { main: TOKENS.accent },
+        error: { main: TOKENS.error },
         background: {
-            default: '#021012',
-            paper: 'rgba(250, 250, 250, 0.05)',
+            default: TOKENS.bg,
+            paper: TOKENS.shell,
         },
         text: {
-            primary: '#fafafa',
-            secondary: 'rgba(250, 250, 250, 0.70)',
+            primary: TOKENS.text,
+            secondary: TOKENS.text2,
         },
-        divider: 'rgba(250, 250, 250, 0.10)',
+        divider: TOKENS.borderSoft,
     },
 
     typography: {
@@ -34,118 +51,39 @@ export const theme = createTheme({
             'Arial',
             'sans-serif',
         ].join(','),
+
+        fontWeightLight: 300,
+        fontWeightRegular: 400,
+        fontWeightMedium: 500,
+
+        button: {
+            textTransform: 'none',
+            fontWeight: 520,
+            letterSpacing: '0.01em',
+            fontSize: '1rem',
+        },
     },
 
     components: {
+        MuiCssBaseline: {
+            styleOverrides: {
+                body: {
+                    color: TOKENS.text,
+                    backgroundColor: TOKENS.bg,
+                    backgroundImage: `
+            radial-gradient(900px 520px at 22% 18%, ${alpha(TOKENS.glow, 0.08)} 0%, transparent 60%),
+            radial-gradient(760px 520px at 84% 68%, ${alpha(TOKENS.accent, 0.08)} 0%, transparent 62%),
+            linear-gradient(180deg, ${TOKENS.bg} 0%, #000304 100%)
+          `,
+                    backgroundAttachment: 'fixed',
+                },
+            },
+        },
+
         MuiPaper: {
             styleOverrides: {
                 root: {
                     backgroundImage: 'none',
-                    border: '1px solid rgba(250, 250, 250, 0.10)',
-                    boxShadow: '0 18px 40px rgba(0, 0, 0, 0.45)',
-                    backdropFilter: 'blur(18px)',
-                },
-            },
-        },
-
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    borderRadius: '0.9rem',
-                    textTransform: 'none',
-                    fontWeight: 600,
-                    color: '#fafafa',
-                    backdropFilter: 'blur(10px)',
-                    willChange: 'transform, box-shadow, background-color, border-color',
-                    transition:
-                        'transform 140ms cubic-bezier(0.2, 0.9, 0.2, 1), ' +
-                        'background-color 140ms cubic-bezier(0.2, 0.9, 0.2, 1), ' +
-                        'border-color 140ms cubic-bezier(0.2, 0.9, 0.2, 1), ' +
-                        'box-shadow 160ms cubic-bezier(0.2, 0.9, 0.2, 1)',
-                },
-
-                contained: {
-                    background: 'rgba(250, 250, 250, 0.06)',
-                    border: '1px solid rgba(250, 250, 250, 0.14)',
-                    boxShadow: '0 10px 26px rgba(0, 0, 0, 0.45)',
-
-                    '&:hover': {
-                        background: 'rgba(171, 0, 60, 0.18)',
-                        borderColor: 'rgba(171, 0, 60, 0.45)',
-                        boxShadow:
-                            '0 16px 36px rgba(0, 0, 0, 0.62), 0 0 0 2px rgba(171, 0, 60, 0.14)',
-                        transform: 'translateY(-2px) scale(1.01)',
-                    },
-
-                    '&:active': {
-                        transition: 'transform 80ms cubic-bezier(0.2, 0.9, 0.2, 1)',
-                        transform: 'translateY(0px) scale(0.98)',
-                    },
-                },
-
-                outlined: {
-                    background: 'rgba(250, 250, 250, 0.04)',
-                    border: '1px solid rgba(250, 250, 250, 0.16)',
-
-                    '&:hover': {
-                        background: 'rgba(171, 0, 60, 0.12)',
-                        borderColor: 'rgba(171, 0, 60, 0.45)',
-                        boxShadow: '0 14px 32px rgba(0, 0, 0, 0.55)',
-                        transform: 'translateY(-2px) scale(1.01)',
-                    },
-
-                    '&:active': {
-                        transition: 'transform 80ms cubic-bezier(0.2, 0.9, 0.2, 1)',
-                        transform: 'translateY(0px) scale(0.985)',
-                    },
-                },
-
-                text: {
-                    background: 'rgba(250, 250, 250, 0.02)',
-
-                    '&:hover': {
-                        background: 'rgba(171, 0, 60, 0.10)',
-                        transform: 'translateY(-2px)',
-                    },
-
-                    '&:active': {
-                        transition: 'transform 80ms cubic-bezier(0.2, 0.9, 0.2, 1)',
-                        transform: 'translateY(0px) scale(0.99)',
-                    },
-                },
-            },
-        },
-
-        MuiOutlinedInput: {
-            styleOverrides: {
-                root: {
-                    borderRadius: '.75rem',
-                    background: 'rgba(0, 0, 0, 0.32)',
-                    fontWeight: 500,
-                    boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.03)',
-
-                    '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(250, 250, 250, 0.12)',
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(250, 250, 250, 0.20)',
-                    },
-
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(171, 0, 60, 0.60)',
-                        boxShadow: '0 0 0 2px rgba(171, 0, 60, 0.18)',
-                    },
-
-                    '&.Mui-error .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(171, 0, 60, 0.45)',
-                        boxShadow: '0 0 0 1px rgba(171, 0, 60, 0.25)',
-                    },
-                },
-
-                input: {
-                    color: '#fafafa',
-                    padding: '.3rem 1.25rem',
-                    fontSize: '1.3rem',
                 },
             },
         },
@@ -153,45 +91,178 @@ export const theme = createTheme({
         MuiInputLabel: {
             styleOverrides: {
                 root: {
-                    color: 'rgba(250, 250, 250, 0.60)',
-                    fontWeight: 500,
-                    fontSize: '1.4rem',
-                    transform: 'translate(1rem, 0.10rem) scale(1)',
+                    color: TOKENS.text2,
+                    fontSize: '1.5rem',
+                    fontWeight: 520,
+                    '&.Mui-focused': { color: TOKENS.text2 },
+                    '&.Mui-error': { color: TOKENS.text2 },
+                },
+                shrink: {
+                    transform: 'translate(14px, -32px) scale(0.84)',
                     transformOrigin: 'top left',
-                    transition: 'transform 180ms ease, color 180ms ease',
-                    '&.Mui-focused': {
-                        color: '#ab003c',
+                    fontWeight: 520,
+                    color: TOKENS.text2,
+                    '&.Mui-focused': { color: TOKENS.text2 },
+                    '&.Mui-error': { color: TOKENS.text2 },
+                },
+            },
+        },
+
+        MuiTextField: {
+            defaultProps: {
+                variant: 'outlined',
+                InputLabelProps: { shrink: true },
+            },
+        },
+
+        MuiCheckbox: {
+            defaultProps: { disableRipple: true },
+            styleOverrides: {
+                root: {
+                    padding: 0,
+                    margin: 0,
+                    borderRadius: '999px',
+                    position: 'relative',
+                    color: alpha(TOKENS.glow, 0.65),
+                    transition: 'color 140ms ease, transform 140ms ease',
+                    '& svg': { fontSize: '1.5rem' },
+                    backgroundImage: 'none',
+                    '&:hover': {
+                        color: alpha(TOKENS.glow, 0.9),
+                        backgroundColor: 'transparent',
+                        backgroundImage: `radial-gradient(circle, ${alpha(TOKENS.glow, 0.95)} 0%, transparent 70%)`,
                     },
-                    '&.Mui-error': {
-                        color: 'rgba(171, 0, 60, 0.95)',
+                    '&.Mui-checked': {
+                        color: alpha(TOKENS.glow, 1),
+                        backgroundImage: `radial-gradient(circle, ${alpha(TOKENS.glow, 0.75)} 0%, transparent 70%)`,
                     },
-                    '&.MuiInputLabel-shrink': {
-                        fontSize: '1.2rem',
-                        fontWeight: 500,
-                        transform: 'translate(1.1rem, -1.5rem) scale(0.85)',
+
+                    '&.Mui-checked:hover': {
+                        backgroundImage: `radial-gradient(circle, ${alpha(TOKENS.glow, 0.9)} 0%, transparent 60%)`,
+                    },
+
+                    '&.Mui-focusVisible': {
+                        backgroundImage: `radial-gradient(circle, ${alpha(TOKENS.glow, 0.65)} 0%, transparent 60%)`,
                     },
                 },
             },
         },
 
-        MuiFormHelperText: {
+        MuiFormControlLabel: {
             styleOverrides: {
                 root: {
-                    marginLeft: '0.15rem',
-                    marginRight: '0.15rem',
-                    marginTop: '0.35rem',
-                    marginBottom: '.5rem',
-                    textAlign: 'center',
-                    fontSize: '0.85rem',
+                    gap: '0.6rem',
+                    marginLeft: 0,
+                    alignItems: 'center',
+
+                    '&:hover .MuiFormControlLabel-label': {
+                        color: TOKENS.text,
+                    },
+                },
+                label: {
+                    fontSize: '1.15rem',
+                    fontWeight: 520,
+                    letterSpacing: '0.015em',
+                    color: TOKENS.wheat,
+                    transition: 'color 160ms ease',
+                },
+            },
+        },
+
+        MuiOutlinedInput: {
+            defaultProps: {
+                notched: false,
+            },
+            styleOverrides: {
+                root: {
+                    borderRadius: '1rem',
+                    backgroundColor: TOKENS.shell2,
+                    fontSize: '1.5rem',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: TOKENS.border,
+                        transition: 'border-color 140ms ease, box-shadow 180ms ease',
+                    },
+                    // ✅ kill the notch cut-out (no gap, full border)
+                    // '& .MuiOutlinedInput-notchedOutline legend': {
+                    //   width: 0,
+                    //   padding: 0,
+                    // },
+                    // REMEMBER THIS FERRIS!!!! - SUPER USEFUL!!!!
+                    '& .MuiOutlinedInput-notchedOutline legend > span': {
+                        display: 'none',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        border: `.2rem solid ${alpha(TOKENS.glow, 0.80)}`,
+                    },
+                    '&:hover': {
+                        boxShadow: `0 0 22px ${alpha(TOKENS.glow, 0.80)}`,
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: alpha(TOKENS.glow, 1),
+                    },
+                    '&.Mui-focused': {
+                        boxShadow: `0 0 22px ${alpha(TOKENS.glow, 1)}`,
+                    },
+                    '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+                        border: `.2rem solid ${alpha(TOKENS.error, 0.80)}`,
+                    },
+                    '&.Mui-error:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: alpha(TOKENS.error, 0.80),
+                        boxShadow: `0 0 22px ${alpha(TOKENS.error, 0.80)}`
+                    },
+                    '&.Mui-error.Mui-focused': {
+                        boxShadow: `0 0 18px ${alpha(TOKENS.error, 0.80)}`,
+                    },
+                },
+
+                input: {
+                    padding: '1rem 1rem',
+                    fontWeight: 440,
+                    color: TOKENS.wheat,
+                },
+            },
+        },
+
+        MuiButton: {
+            defaultProps: { disableElevation: true },
+            styleOverrides: {
+                root: {
+                    borderRadius: '1.05rem',
+                    padding: '0.85rem 1.1rem',
+                    fontWeight: 520,
                     letterSpacing: '0.01em',
-                    color: 'rgba(250,250,250,0.62)',
-                    '&.Mui-error': {
-                        color: 'rgba(171, 0, 60, 0.90)',
+                },
+                contained: {
+                    backgroundColor: 'rgba(250, 250, 250, 0.08)',
+                    border: `1px solid ${TOKENS.border}`,
+                    color: TOKENS.wheat,
+
+                    '&:hover': {
+                        backgroundColor: 'rgba(250, 250, 250, 0.12)',
+                        boxShadow: `0 0 18px ${alpha(TOKENS.glow, 0.14)}`,
+                        borderColor: alpha(TOKENS.glow, 0.35),
+                    },
+
+                    '&.Mui-focusVisible ensure': {
+                        boxShadow: `0 0 22px ${alpha(TOKENS.glow, 0.18)}`,
+                    },
+                },
+                outlined: {
+                    borderColor: TOKENS.border,
+                    color: 'rgba(250, 250, 250, 0.82)',
+                    backgroundColor: 'rgba(4, 8, 10, 0.45)',
+
+                    '&:hover': {
+                        borderColor: alpha(TOKENS.glow, 1),
+                        backgroundColor: 'rgba(4, 8, 10, 0.60)',
+                        boxShadow: `0 0 22px ${alpha(TOKENS.glow, 0.80)}`,
+                    },
+
+                    '&.Mui-focusVisible': {
+                        boxShadow: `0 0 22px ${alpha(TOKENS.glow, 0.16)}`,
                     },
                 },
             },
         },
     },
 });
-
-export default theme;

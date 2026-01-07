@@ -6,7 +6,7 @@
 import { useEffect } from 'react';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { Box, Button, IconButton, Typography } from '@mui/material';
+import { Box, Button, IconButton, Paper, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 
 
@@ -82,6 +82,7 @@ export default function RHFCreateForm() {
                         justifyContent: 'flex-end',
                         width: '100%',
                         mb: '1.25rem',
+                        p: '1rem'
                     }}
                 >
                     <IconButton
@@ -124,7 +125,7 @@ export default function RHFCreateForm() {
                         minLength: { value: 8, message: 'Minimum 8 characters' },
                         pattern: {
                                 value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
-                                message: "Include 1 uppercase letter, 1 number, and 1 symbol"
+                                message: "Uppercase 'A', Number '1', Symbol '!'"
                                 },
                         validate: (v) => (!/\s/.test(v) ? true : 'No spaces allowed'),
                     }}

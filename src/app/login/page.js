@@ -1,59 +1,53 @@
-// Login Form Component Implementation 
+// // Login Form Component Implementation 
 
 
-// Dependencies 
-import { Box, Typography, Button } from '@mui/material';
+// // Dependencies 
+import { Box, Divider, Typography } from '@mui/material';
 
 
-// Components & Necessary Files
+// // Components & Necessary Files
+import AuthShell from '@/components/layouts/shells/AuthShell';
+import AuthHeroPanel from '@/components/layouts/shells/AuthHeroPanel';
 import RHFLoginForm from '@/components/forms/examples/RHFLoginForm';
-import MotionBox from '@/components/motion/MotionBox';
-import GoogleSignInForm from '@/components/forms/GoogleSignInForm';
-import GitHubSignInForm from '@/components/forms/GitHubSignInForm';
 
 
-// Login Component
-export default function LoginPage() {
-
-
-
+// // Login Component
+function AuthRightPanel() {
     return (
         <Box
             sx={{
-                display: 'grid',
-                minHeight: '100dvh',
-                placeItems: 'center',
-                textAlign: 'center'
+                mx: 'auto',
+                maxWidth: '30rem',
+                width: '100%',
             }}
         >
-            <MotionBox>
-                <Box
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    textAlign: 'center',
+                }}
+            >
+                <Typography
+                    variant='h2'
+                >
+                    Sign in
+                </Typography>
+                <Typography
                     sx={{
-                        width: 'min(32rem, 92vw)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '1rem',
-                        p: '2rem',
-                        borderRadius: '1rem',
-                        background: 'rgba(2, 10, 12, 0.90)',
-                        backdropFilter: 'blur(14px)',
-                        border: '1px solid rgba(255,255,255,0.10)',
+                        color: 'rgba(250,250,250,0.70)',
+                        mb: '2rem',
+                        mt: '1rem',
                     }}
                 >
-                    <Typography
-                        variant='h1'
-                        sx={{
-                            fontWeight: '600',
-                            margin: '2rem'
-                        }}
-                    >
-                        Login
-                    </Typography>
-                    <RHFLoginForm />
-                    <GoogleSignInForm />
-                    <GitHubSignInForm />
-                </Box>
-            </MotionBox>
+                    Welcome back, enter your credentials to continue.
+                </Typography>
+            </Box>
+            <RHFLoginForm />
         </Box>
-    )
+    );
+}
+
+export default function LoginPage() {
+    return <AuthShell left={<AuthHeroPanel />} right={<AuthRightPanel />} />;
 }

@@ -28,7 +28,7 @@ export default function RHFFormAuthLinkButtons() {
       <RHFFormSubmitButton
         component={Link}
         href="/user/forgot-password"
-        variant="contained"
+        variant="outlined"
         sx={{ 
           width: '11rem'
         }}
@@ -38,7 +38,7 @@ export default function RHFFormAuthLinkButtons() {
       <RHFFormSubmitButton
         component={Link}
         href="/user/register"
-        variant="contained"
+        variant="outlined"
         sx={{ 
           width: '11rem'
         }}

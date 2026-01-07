@@ -23,11 +23,12 @@ export default function RootLayout({ children }) {
           <Box
             sx={{
               minHeight: '100vh',
-              backgroundImage: "url('/aeroquest_wallpaper_03.jpg')",
+              // backgroundImage: "url('/aeroquest_wallpaper_03.jpg')",
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
               backgroundAttachment: 'fixed',
+              backgroundColor: 'rgba(6, 10, 12, 0.86)'
             }}
           > 
           {children}

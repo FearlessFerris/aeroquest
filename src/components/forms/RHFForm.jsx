@@ -3,7 +3,7 @@
 
 
 // Dependencies 
-import { Box } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { FormProvider } from 'react-hook-form';
 
 
@@ -27,6 +27,9 @@ export default function RHFForm({
                 noValidate
                 onSubmit={methods.handleSubmit(onSubmit)}
                 {...boxProps}
+                sx={{
+                    padding: '1rem'
+                }}
             > 
                 {children}
             </Box>
