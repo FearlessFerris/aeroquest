@@ -21,10 +21,12 @@ export async function POST(req){
     try{ 
         const body = await req.json(); 
         const usernameRaw = body?.username; 
-        const emailRaw = body?.email;
+        // const emailRaw = body?.email;
+        const emailRaw = String(body.email ?? '').trim().toLowerCase();
         const passwordRaw = body?.password; 
         const confirmPasswordRaw = body?.confirmPassword; 
-        const imageUrlRaw = body?.imageUrl; 
+        // const imageUrl = null; 
+        // const imageFile = null; 
 
         if(
             !isString(usernameRaw) ||
@@ -42,12 +44,12 @@ export async function POST(req){
         const email = emailRaw.trim().toLowerCase(); 
         const password = passwordRaw;
         const confirmPassword = confirmPasswordRaw; 
-        const imageUrl = 
-            isString(imageUrlRaw) && 
-            hasNoSpaces(imageUrlRaw) && 
-            imageUrlRaw.length > 0
-            ? imageUrlRaw.trim()
-            : null;
+        // const imageUrl = 
+        //     isString(imageUrlRaw) && 
+        //     hasNoSpaces(imageUrlRaw) && 
+        //     imageUrlRaw.length > 0
+        //     ? imageUrlRaw.trim()
+        //     : null;
         
         if(username.length < 8 || username.length > 30 || !isUsername(username)){
             return NextResponse.json(
@@ -77,10 +79,20 @@ export async function POST(req){
             );
         }
 
-        const existingUsername = await prisma.user.findUnique({
-            where: {username},
-            select: {id: true},
-        });
+        const [existingUsername, existingEmail] = await Promise.all([ 
+            prisma.user.findUnique({
+                where:{username},
+                select:{
+                    id: true,
+                }
+            }),
+            prisma.user.findUnique({ 
+                where:{email}, 
+                select:{ 
+                    id: true,
+                }
+            })
+        ]);
 
         if(existingUsername){
             return NextResponse.json(
@@ -88,11 +100,6 @@ export async function POST(req){
                 {status: 409}
             );
         }
-
-        const existingEmail = await prisma.user.findUnique({
-            where: {email},
-            select: {id: true},
-        });
 
         if(existingEmail){ 
             return NextResponse.json(
@@ -107,25 +114,26 @@ export async function POST(req){
                 username, 
                 email, 
                 passwordHash, 
-                imageUrl,
                 onboarded: false,
             },
             select: { 
                 id: true, 
                 username: true, 
                 email: true, 
-                imageUrl: true, 
                 onboarded: true, 
                 createdAt: true,
             },
         });
-
-        return NextResponse.json({ok: true, user}, {status: 201});
+        return NextResponse.json(
+            {ok: true, user}, 
+            {status: 201}
+        );
     }
     catch(error){ 
+        console.error('Register Error:', error);
         return NextResponse.json(
-            {ok: false, error: 'Server error creating user', error},
+            {ok: false, error: 'Server error creating user'},
             {status: 500}
-        )
+        );
     }
 }

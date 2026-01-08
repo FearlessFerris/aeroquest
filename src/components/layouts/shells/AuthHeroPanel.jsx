@@ -12,11 +12,21 @@ import { Box, Typography, Stack } from '@mui/material';
 
 
 // AuthHeroPanel Component
+const wheat = 'rgba(245, 233, 207, 1)';
+
+const wheatGlow = `
+  0 0 6px rgba(245, 233, 207, 0.30),
+  0 0 14px rgba(245, 233, 207, 0.20),
+  0 0 26px rgba(245, 233, 207, 0.12),
+  0 0 34px rgba(171, 0, 60, 0.10),
+  0 18px 60px rgba(0, 0, 0, 0.55)
+`;
+
 export default function AuthHeroPanel({
     brand = 'Aeroquest',
-    title = 'Create your account to\nexplore the world of avation',
-    subtitle = 'Clean glass UI, rich focus glows, and a layout that feels alive.',
-    imageSrc = '/aeroquest_wallpaper_02.jpg',
+    title = 'Above the Noise. \nBeyond the Clouds.',
+    subtitle = 'Aircraft, systems, and the incredible forces that connect them.',
+    imageSrc = '/aeroquest_wallpaper_03.jpg',
     badge,
 }) {
     return (
@@ -66,78 +76,49 @@ export default function AuthHeroPanel({
                     position: 'absolute',
                 }}
             />
-            <Box
-                sx={{
-                    position: 'relative',
-                    zIndex: 1
-                }}
-            >
-                <Stack
-                    alignItems="center"
-                    direction="row"
-                    justifyContent="space-between">
-                    <Typography
-                        sx={{
-                            color: 'rgba(250,250,250,0.88)',
-                            fontWeight: 800,
-                            fontSize: '5rem',
-                            letterSpacing: '0.01em',
-                        }}
-                    >
-                        {brand}
-                    </Typography>
+        <Box sx={{ position: 'relative', zIndex: 1 }}>
+        <Stack alignItems="center" direction="row" justifyContent="space-between">
+          <Typography
+            sx={{
+              color: wheat,
+              fontWeight: 750,
+              fontSize: { xs: '3.2rem', sm: '4.3rem', md: '5.6rem' },
+              letterSpacing: '-0.02em',
+              textShadow: wheatGlow,
+            }}
+          >
+            {brand}
+          </Typography>
+        </Stack>
+      </Box>
 
-                    {badge ? (
-                        <Box
-                            sx={{
-                                backgroundColor: 'rgba(255,255,255,0.08)',
-                                backdropFilter: 'blur(14px) saturate(1.2)',
-                                border: '1px solid rgba(255,255,255,0.14)',
-                                borderRadius: '999px',
-                                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.10)',
-                                color: 'rgba(250,250,250,0.82)',
-                                fontSize: '0.82rem',
-                                fontWeight: 750,
-                                px: 1.2,
-                                py: 0.55,
-                            }}
-                        >
-                            {badge}
-                        </Box>
-                    ) : null}
-                </Stack>
-            </Box>
-            <Box
-                sx={{
-                    position: 'relative',
-                    zIndex: 1
-                }}
-            >
-                <Typography
-                    variant="h3"
-                    sx={{
-                        color: 'rgba(250,250,250,0.96)',
-                        fontWeight: 900,
-                        letterSpacing: '-0.03em',
-                        lineHeight: 1.05,
-                        textShadow: '0 18px 60px rgba(0,0,0,0.55)',
-                        whiteSpace: 'pre-line',
-                    }}
-                >
-                    {title}
-                </Typography>
-                <Typography
-                    sx={{
-                        color: 'rgba(250,250,250,0.70)',
-                        fontWeight: 550,
-                        mt: 1.6,
-                        maxWidth: 420,
-                        textShadow: '0 16px 50px rgba(0,0,0,0.55)',
-                    }}
-                >
-                    {subtitle}
-                </Typography>
-            </Box>
-        </Box>
+      <Box sx={{ position: 'relative', zIndex: 1 }}>
+        <Typography
+          variant="h3"
+          sx={{
+            color: wheat,
+            fontWeight: 800,
+            letterSpacing: '-0.035em',
+            lineHeight: 1.05,
+            textShadow: wheatGlow,
+            whiteSpace: 'pre-line',
+          }}
+        >
+          {title}
+        </Typography>
+
+        <Typography
+          sx={{
+            color: 'rgba(245, 233, 207, 0.78)',
+            fontWeight: 550,
+            mt: 1.6,
+            maxWidth: 450,
+            textShadow: '0 10px 35px rgba(0,0,0,0.55)',
+          }}
+        >
+          {subtitle}
+        </Typography>
+      </Box>
+    </Box>
     );
 }
