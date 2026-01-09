@@ -7,7 +7,7 @@
 // Dependencies 
 import { Box, Divider, IconButton, Typography } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useEffect } from 'react';
 
 
@@ -27,28 +27,29 @@ import GitHubSignInForm from '../GitHubSignInForm';
 // Login Form Component
 export default function RHFLoginForm({
   onRegisterReset, 
-  onSetUsername,
+  onSetEmailPreview,
 }) {
   const methods = useForm({
     mode: 'onTouched',
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
       rememberMe: false,
     },
   });
 
-  const { getValues } = methods;
-  const username = getValues('username'); 
-
-  onSetUsername(username);
+  const { handleSubmit, control, getValues, reset, formState } = methods; 
+  const email = useWatch({control, name: 'email'})
 
   useEffect(() => { 
-    if(!onRegisterReset) return;
-    onRegisterReset(() => () => methods.reset());
-    return () => onRegisterReset(null);
-  },[onRegisterReset, methods.reset]);
+    if(!onSetEmailPreview) return;
+    onSetEmailPreview(email?.trim() || '');
+  },[email, onSetEmailPreview]);
 
+  useEffect(() => { 
+    if(!onRegisterReset) return; 
+    onRegisterReset(() => reset );
+  },[onRegisterReset, reset]);
 
   const onSubmit = async (data) => {
     console.log('Submitted:', data);

@@ -18,7 +18,7 @@ import RHFLoginForm from '@/components/forms/examples/RHFLoginForm';
 export default function AuthRightPanel() {
 
     const [resetFunction, setResetFunction] = useState(null);
-    const [username, setUsername] = useState(null);
+    const [emailPreview, setEmailPreview] = useState('');
 
     return (
         <Box
@@ -88,7 +88,7 @@ export default function AuthRightPanel() {
                                     `,
                                 }}
                             >
-                                {username}
+                            {emailPreview}
                             </Box>
                         </Typography>
 
@@ -104,7 +104,7 @@ export default function AuthRightPanel() {
                 </Box>
                 <RHFLoginForm
                     onRegisterReset={setResetFunction}
-                    onSetUsername={setUsername}
+                    onSetEmailPreview={setEmailPreview}
                 />
             </Box>
         </Box>
