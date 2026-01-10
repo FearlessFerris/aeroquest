@@ -8,6 +8,7 @@ import { Box, Button, Divider, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useRouter } from "next/navigation";
+import { signIn } from 'next-auth/react';
 
 
 
@@ -17,7 +18,6 @@ import RHFTextField from '@/components/forms/fields/RHFFormTextField';
 import RHFFormSubmitButton from '@/components/forms/RHFFormSubmitButton';
 import GoogleSignInForm from '../GoogleSignInForm';
 import GitHubSignInForm from '../GitHubSignInForm';
-import { signIn } from 'next-auth/react';
 
 
 
@@ -42,50 +42,50 @@ export default function RHFCreateForm({
     const username = useWatch({ control, name: 'username' });
 
     useEffect(() => {
-        if (!onSetUsernamePreview) return;
+        if(!onSetUsernamePreview) return;
         onSetUsernamePreview(username?.trim() || '');
     }, [username, onSetUsernamePreview]);
 
     useEffect(() => {
-        if (!onRegisterReset) return;
+        if(!onRegisterReset) return;
         onRegisterReset(() => () => reset());
         return () => onRegisterReset(null);
     }, [onRegisterReset, reset]);
 
     const onSubmit = async (data) => {
         console.log('Create Submitted:', data);
-        const res = await fetch('/api/auth/register',{ 
+        const res = await fetch('/api/auth/register', {
             method: 'POST',
-            headers:{
+            headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ 
-                username: data.username, 
+            body: JSON.stringify({
+                username: data.username,
                 email: data.email,
-                password: data.password, 
+                password: data.password,
                 confirmPassword: data.confirmPassword,
             }),
         });
 
-        const json = await res.json(); 
-        if(!res.ok || !json?.ok){ 
+        const json = await res.json();
+        if (!res.ok || !json?.ok) {
             console.log(json?.error || 'Registration Failed')
             return;
-        } 
+        }
 
         const result = await signIn("credentials", {
-  email: data.email,
-  password: data.password,
-  redirect: false, // keep false so YOU control navigation
-});
+            email: data.email,
+            password: data.password,
+            redirect: false,
+        });
 
-console.log("SIGNIN RESULT:", result);
+        console.log("SIGNIN RESULT:", result);
 
-if (result?.ok) {
-  router.replace("/"); // or "/dashboard"
-} else {
-  console.log(result?.error || "Sign-in failed");
-}
+        if (result?.ok) {
+            router.replace("/");
+        } else {
+            console.log(result?.error || "Sign-in failed");
+        }
     };
 
     return (
@@ -96,8 +96,8 @@ if (result?.ok) {
                 gap: '.7rem'
             }}
         >
-            <RHFForm 
-                methods={methods} 
+            <RHFForm
+                methods={methods}
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <Box

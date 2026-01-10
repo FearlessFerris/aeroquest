@@ -9,6 +9,9 @@ import { Box, Divider, IconButton, Typography } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import { useForm, useWatch } from 'react-hook-form';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { signIn } from "next-auth/react";
+
 
 
 
@@ -37,7 +40,7 @@ export default function RHFLoginForm({
       rememberMe: false,
     },
   });
-
+  const router = useRouter();
   const { handleSubmit, control, getValues, reset, formState } = methods; 
   const email = useWatch({control, name: 'email'})
 
@@ -52,8 +55,26 @@ export default function RHFLoginForm({
   },[onRegisterReset, reset]);
 
   const onSubmit = async (data) => {
-    console.log('Submitted:', data);
-  };
+    console.log('Logging in User:', data);
+
+    const res = await signIn("credentials", {
+  email: data.email,
+  password: data.password,
+  redirectTo: '/'
+});
+
+console.log("signIn result:", res);
+
+  if (res?.ok) {
+    router.push(res.url ?? "/");
+    router.refresh(); // important for server components to re-read cookies/session
+    return;
+  }
+
+  // res?.error will be set on failure
+  console.error(res?.error ?? "Login failed");
+
+  }
 
   return (
     <Box 
