@@ -16,8 +16,9 @@ import { redirect } from 'next/navigation';
 // Home Page Component
 export default async function HomePage() {
   const session = await auth();
+  if(!session?.user) redirect('/user/login');
 
-  if (!session) redirect('/login');
+  const { email, name } = session?.user; 
 
  return (
     <Box
@@ -41,13 +42,15 @@ export default async function HomePage() {
             }}
         >
             <Typography>
-                Signed in as {session.user?.email}
+                { name }
             </Typography>
-
+            <Typography>
+                { email }
+            </Typography>
             <form
                 action={async () => {
                     'use server';
-                    await signOut({ redirectTo: '/login' });
+                    await signOut({ redirectTo: '/user/login' });
                 }}
             >
                 <Button

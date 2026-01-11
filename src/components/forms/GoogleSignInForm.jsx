@@ -11,7 +11,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 
 // Components & Necessary Files 
 import GoogleLogo from '../icons/GoogleLogo';
-import { googleSignIn } from '@/app/login/actions';
+import { googleSignIn } from '@/app/user/login/actions';
 import RHFFormSubmitButton from './RHFFormSubmitButton';
 import HoverSwapIcon from '../ui/HoverSwapIcon';
 

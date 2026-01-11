@@ -234,7 +234,7 @@ export const theme = createTheme({
                 },
                 contained: {
                     backgroundColor: 'rgba(250, 250, 250, 0.08)',
-                    border: `1px solid ${TOKENS.border}`,
+                    border: `.2rem solid ${TOKENS.border}`,
                     color: TOKENS.wheat,
 
                     '&:hover': {
@@ -251,6 +251,7 @@ export const theme = createTheme({
                     borderColor: TOKENS.border,
                     color: 'rgba(250, 250, 250, 0.82)',
                     backgroundColor: 'rgba(4, 8, 10, 0.45)',
+                    border: `.2rem solid ${TOKENS.border}`,
 
                     '&:hover': {
                         borderColor: alpha(TOKENS.glow, 1),

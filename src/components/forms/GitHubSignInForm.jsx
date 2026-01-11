@@ -12,7 +12,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 // Components & Necessary Files 
 import HoverSwapIcon from '../ui/HoverSwapIcon';
 import RHFFormSubmitButton from './RHFFormSubmitButton';
-import { githubSignIn } from '@/app/login/actions';
+import { githubSignIn } from '@/app/user/login/actions';
 
 
 // GitHubSignInForm Component

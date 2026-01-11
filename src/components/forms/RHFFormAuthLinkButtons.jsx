@@ -37,7 +37,7 @@ export default function RHFFormAuthLinkButtons() {
       </RHFFormSubmitButton>
       <RHFFormSubmitButton
         component={Link}
-        href="/user/register"
+        href="/user/create"
         variant="outlined"
         sx={{ 
           width: '11rem'
