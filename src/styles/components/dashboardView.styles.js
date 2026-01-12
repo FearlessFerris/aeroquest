@@ -106,7 +106,7 @@ export const glassCardSx = {
         border: `.2rem solid ${TOKENS.borderSoft}`,
         backgroundColor: alpha(TOKENS.shell2, 0.55),
         backgroundImage: `
-      radial-gradient(520px 240px at 25% 0%, ${alpha(TOKENS.glow, 0.06)} 0%, transparent 62%),
+      radial-gradient(520px 240px at 25% 0%, ${alpha(TOKENS.glow, 0.02)} 0%, transparent 62%),
       linear-gradient(180deg, ${alpha(TOKENS.shell, 0.10)} 0%, transparent 70%)
     `,
         backdropFilter: 'blur(14px)',

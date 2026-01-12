@@ -1,70 +1,34 @@
-// Home Page Component Implementation 
-// export const dynamic = "force-dynamic";
-// export const revalidate = 0;
-// export const fetchCache = "force-no-store";
+
+'use client';
+
+import { Box, Typography } from '@mui/material';
+import { useState } from 'react';
+import Globe from '@/components/globe/Globe';
+import GlassCard from '@/components/dashboard/GlassCard';
+import MyGlobe from '../../components/myGlobe/MyGlobe';
 
 
-// Dependencies 
-import { Box, Typography, Button } from '@mui/material';
-import { auth, signOut } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+export default function AppHomePage() {
+  const [selectedFlight, setSelectedFlight] = useState(null);
 
-
-// Components & Necessary Files 
-
-
-// Home Page Component
-export default async function HomePage() {
-  const session = await auth();
-  if(!session?.user) redirect('/user/login');
-
-  const { email, name } = session?.user; 
-
- return (
-    <Box
-        sx={{
-            display: 'grid',
-            minHeight: '100vh',
-            placeItems: 'center',
-            textAlign: 'center',
-        }}
-    >
-        <Typography
-            variant='h1'
-        >
-            Aeroquest
+  return (
+    <Box sx = {{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+      {/* <Globe onSelectFlight = { setSelectedFlight } /> */}
+      <MyGlobe /> 
+      <GlassCard
+        title = { selectedFlight ? 'Flight Selected' : 'Explore Live Airspace' }
+        subtitle = {
+          selectedFlight
+            ? `${selectedFlight.callsign} • ${selectedFlight.airline}`
+            : 'Click a flight marker to inspect telemetry and drill down into aircraft, airline, and route.'
+        }
+      >
+        <Typography sx = {{ opacity: 0.9, lineHeight: 1.7 }}>
+          {selectedFlight
+            ? `Altitude: ${selectedFlight.altitude.toLocaleString()} ft • Speed: ${selectedFlight.speed} kts`
+            : 'Next: add filters, hover inspect, and a right-side glass panel for deep details.'}
         </Typography>
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1rem'
-            }}
-        >
-            <Typography>
-                { name }
-            </Typography>
-            <Typography>
-                { email }
-            </Typography>
-            <form
-                action={async () => {
-                    'use server';
-                    await signOut({ redirectTo: '/user/login' });
-                }}
-            >
-                <Button
-                    type='submit'
-                    variant='contained'
-                    sx={{
-                        fontSize: '1rem',
-                        width: 'auto'
-                    }}
-                >
-                    Sign Out
-                </Button>
-            </form>
-        </Box>
+      </GlassCard>
     </Box>
-)
+  );
 }

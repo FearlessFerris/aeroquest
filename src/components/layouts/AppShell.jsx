@@ -22,13 +22,12 @@ export default function AppShell({ user, children }) {
       }}
     >
       <AppTopBar user = {user} />
-
       <Box
         sx={{
-          mt: { xs: '1.25rem', md: '1.75rem' },
-          mx: 'auto',
-          width: '100%',
-          maxWidth: '100rem', 
+            mt: { xs: '1.25rem', md: '1.75rem' },
+            mx: 'auto',
+            width: '100%',
+            maxWidth: '100rem', 
         }}
       >
         {children}
