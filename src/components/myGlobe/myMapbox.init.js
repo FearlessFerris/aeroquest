@@ -6,37 +6,29 @@ import mapboxgl from 'mapbox-gl';
 
 
 // Components & Necessary Files 
-
+import { handleFlightSelection } from './globe.utils';
 
 
 // Mapbox Initialization Component
 export function mapboxInitialization({ 
     accessToken, 
     containerEl, 
-    projection = 'globe', 
-    initialView = { center: [-90, 34], zoom: 4,}, 
-    style = 'mapbox://styles/mapbox/satellite-streets-v12',
-    antialias = true, 
-    cooperativeGestures = false,
+    initialView,
     flightsGeoJSON,
+    // onFlightClick
 }){ 
     mapboxgl.accessToken = accessToken; 
     const map = new mapboxgl.Map({ 
         container: containerEl, 
+        initialView: { center: [-90, 34], zoom: 4,},
         center: initialView.center, 
         zoom: initialView.zoom, 
-        style: style,
-        projection: projection, 
-        antialias: antialias,
-        cooperativeGestures: cooperativeGestures, 
+        style: 'mapbox://styles/mapbox/satellite-streets-v12',
+        projection: 'globe', 
+        antialias: true,
+        cooperativeGestures: false, 
     });
 
-    const onEnterFlights = () => (map.getCanvas().style.cursor = 'pointer');
-    const onExitFlights = () => (map.getCanvas().style.cursor = ''); 
-    const onClickFlights = (e) => { 
-        const flight = e.features?.[0]; 
-        
-    }
     map.on('style.load', () => {
         map.setFog({
           range: [0.6, 10],
@@ -67,6 +59,35 @@ export function mapboxInitialization({
             },
           });
         }
+
+        map.addInteraction('flights-dot-enter', { 
+            type: 'mouseenter', 
+            target:{ layerId: 'flights-dot'},
+            handler:({}) => { 
+                console.log('Changing Mouse to Pointer');
+                map.getCanvas().style.cursor = 'pointer'; 
+            }
+        });
+
+        map.addInteraction('flights-dot-leave', { 
+            type: 'mouseleave', 
+            target:{layerId: 'flights-dot'}, 
+            handler:({}) => { 
+                console.log('Changing Mouse back to Cursor'); 
+                map.getCanvas().style.cursor = '';
+            }
+        });
+
+        map.addInteraction('flights-dot-click', { 
+            type: 'click', 
+            target:{layerId: 'flights-dot'},
+            handler:({feature})=>{ 
+                console.log(feature?.[0]);
+            }
+            // handler:(e)=>{ 
+            //     console.log('Click Event', e);
+            // }
+        });
       });
     
     return map;

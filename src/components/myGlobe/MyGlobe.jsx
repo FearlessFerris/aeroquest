@@ -10,6 +10,7 @@ import { useEffect, useRef } from 'react';
 import { myGlobeSx } from '@/styles/components/myGlobe.styles';
 import { mapboxInitialization } from './myMapbox.init';
 import { DEMO_FLIGHTS_JSON } from '../globe/globe.utils';
+import { onFlightClick } from './globe.utils';
 
 // Globe Component
 export default function Globe({ 
@@ -31,6 +32,7 @@ export default function Globe({
             containerEl: containerRef.current, 
             initialView: initialViewRef.current, 
             flightsGeoJSON: DEMO_FLIGHTS_JSON,
+            // onFlightClick: onFlightClick,
         });
 
         mapRef.current = map

@@ -4,7 +4,6 @@ import { setupCtrlScrollZoom, setupSlowCtrlRotate } from './globe.utils';
 export function initGlobeMap({
   containerEl,
   accessToken,
-  initialView,
   flightsGeoJSON,
   onFlightClick,
   onRegionChange,
@@ -15,6 +14,7 @@ export function initGlobeMap({
   const map = new mapboxgl.Map({
     container: containerEl,
     style: 'mapbox://styles/mapbox/satellite-streets-v12',
+    initialView: { center: [-90, 34], zoom: 4,},
     center: initialView.center,
     zoom: initialView.zoom,
     projection: 'globe',
@@ -31,7 +31,7 @@ export function initGlobeMap({
   let cleanupRotation = null;
   let handlersAttached = false;
 
-  const onEnterFlights = () => (map.getCanvas().style.cursor = 'pointer');
+  const onEnterFlights = () => (map.getCanvas().style.cursor = 'pointer', console.log('We are entering flights'));
   const onLeaveFlights = () => (map.getCanvas().style.cursor = '');
   const onClickFlights = (e) => {
     const f = e.features?.[0];
