@@ -8,7 +8,7 @@
 
 
 // Globe Utilities 
-export const handleFlightSelection = (flightProperties) => { 
+export const handleFlightClickProperties = (flightProperties) => { 
     return{ 
         id: flightProperties.id
     }

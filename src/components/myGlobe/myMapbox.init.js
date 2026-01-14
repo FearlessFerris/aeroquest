@@ -6,7 +6,7 @@ import mapboxgl from 'mapbox-gl';
 
 
 // Components & Necessary Files 
-import { handleFlightSelection } from './globe.utils';
+import { handleFlightClickProperties } from './globe.utils';
 
 
 // Mapbox Initialization Component
@@ -14,9 +14,9 @@ export function mapboxInitialization({
     accessToken, 
     containerEl, 
     initialView,
-    flightsGeoJSON,
-    // onFlightClick
+    flightDotCoordinates, 
 }){ 
+    console.log('Flight Dot Coordinates', flightDotCoordinates);
     mapboxgl.accessToken = accessToken; 
     const map = new mapboxgl.Map({ 
         container: containerEl, 
@@ -40,7 +40,7 @@ export function mapboxInitialization({
         if (!map.getSource('flights')) {
           map.addSource('flights', { 
                 type: 'geojson', 
-                data: flightsGeoJSON 
+                data: flightDotCoordinates, 
             });
         }
     
@@ -79,15 +79,18 @@ export function mapboxInitialization({
         });
 
         map.addInteraction('flights-dot-click', { 
-            type: 'click', 
-            target:{layerId: 'flights-dot'},
-            handler:({feature})=>{ 
-                console.log(feature?.[0]);
+            type:'click',
+            target:{layerId: 'flights-dot'}, 
+            handler:(e)=>{ 
+                const p = e.feature?.properties;
+                console.log(p);
+                if(!p) return; 
+                const selP = handleFlightClickProperties(p);
+                console.log(selP);
+                
             }
-            // handler:(e)=>{ 
-            //     console.log('Click Event', e);
-            // }
-        });
+        })
+
       });
     
     return map;
