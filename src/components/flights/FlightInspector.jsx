@@ -188,3 +188,4 @@ function formatKnots(n) {
   if (typeof n !== 'number' || Number.isNaN(n)) return '—';
   return `${Math.round(n)} kt`;
 }
+

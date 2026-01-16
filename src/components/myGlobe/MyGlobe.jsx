@@ -3,36 +3,38 @@
 
 // Dependencies 
 import { Box, Typography } from '@mui/material'; 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 
 // Components & Necessary Files 
 import { myGlobeSx } from '@/styles/components/myGlobe.styles';
-import { mapboxInitialization } from './myMapbox.init';
+import { MapboxInitialization } from './mapboxInitialization';
 import { DEMO_FLIGHTS_JSON } from '../globe/globe.utils';
+import GlobeInformationDisplay from '../myGlobe/GlobeInformationDisplay'; 
 
 
 // Globe Component
 export default function Globe({ 
-    initialView = { 
-        center: [-90, 34], 
-        zoom: 4
-    }
+
 }){ 
     const features = DEMO_FLIGHTS_JSON;
     const containerRef = useRef(null); 
-    const initialViewRef = useRef(initialView);
     const mapRef = useRef(null); 
+    const [ informationSourceState, setInformationSourceState ] = useState({ 
+        airlines: false, 
+        airports: false, 
+        flights: false, 
+    })
     useEffect(() => { 
         if(!containerRef.current) return;
         if(mapRef.current) return; 
         const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN; 
-        if(!token) return; 
-        const map = mapboxInitialization({ 
-            accessToken: token,
-            containerEl: containerRef.current, 
-            initialView: initialViewRef.current, 
-            flightDotCoordinates: features,
+        if(!token) return;
+        const map = MapboxInitialization({ 
+            accessToken: token, 
+            containerEl: containerRef.current,
+            informationSource: features,
+            informationSourceState: informationSourceState,
         });
 
         mapRef.current = map

@@ -69,6 +69,7 @@ export const DEMO_FLIGHTS_JSON = {
     ],
   };
 
+
   export function getRegionLabel(lat, lng) {
   if (lat > 15 && lat < 72 && lng > -170 && lng < -50) return 'North America';
   if (lat > -60 && lat < 15 && lng > -95 && lng < -30) return 'South America';
@@ -162,4 +163,25 @@ export function setupSlowCtrlRotate(map) {
 
 export function clamp(n, min, max) {
   return Math.min(max, Math.max(min, n));
+}
+
+
+export function handleFlightClickProperties(p) {
+  const id = p?.id ?? p?.flight_id ?? p?.callsign ?? 'UNKNOWN';
+
+  const callsign = p?.callsign ?? p?.flight ?? '—';
+  const airline = p?.airline ?? p?.carrier ?? 'Unknown Airline';
+
+  const altitude = Number(p?.altitude ?? p?.baro_altitude ?? 0);
+  const speed = Number(p?.speed ?? p?.velocity ?? 0);
+
+  // If your source provides lon/lat fields, use them here.
+  // Otherwise your FlightInspector can keep using the feature geometry in the click handler later.
+  const lon = Number(p?.lon ?? p?.longitude);
+  const lat = Number(p?.lat ?? p?.latitude);
+
+  const coordinates =
+    Number.isFinite(lon) && Number.isFinite(lat) ? [lon, lat] : undefined;
+
+  return { id, callsign, airline, altitude, speed, coordinates };
 }

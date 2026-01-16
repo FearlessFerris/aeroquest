@@ -16,7 +16,6 @@ export function mapboxInitialization({
     initialView,
     flightDotCoordinates, 
 }){ 
-    console.log('Flight Dot Coordinates', flightDotCoordinates);
     mapboxgl.accessToken = accessToken; 
     const map = new mapboxgl.Map({ 
         container: containerEl, 
@@ -83,11 +82,9 @@ export function mapboxInitialization({
             target:{layerId: 'flights-dot'}, 
             handler:(e)=>{ 
                 const p = e.feature?.properties;
-                console.log(p);
                 if(!p) return; 
                 const selP = handleFlightClickProperties(p);
                 console.log(selP);
-                
             }
         })
 
@@ -95,3 +92,4 @@ export function mapboxInitialization({
     
     return map;
 }
+

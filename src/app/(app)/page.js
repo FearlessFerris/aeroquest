@@ -6,7 +6,6 @@ import { useState } from 'react';
 import Globe from '@/components/globe/Globe';
 import GlassCard from '@/components/dashboard/GlassCard';
 import MyGlobe from '../../components/myGlobe/MyGlobe';
-import GlobeScene from '@/components/globe/GlobeScene';
 
 
 export default function AppHomePage() {
@@ -14,9 +13,7 @@ export default function AppHomePage() {
 
   return (
     <Box sx = {{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-      {/* <Globe onSelectFlight = { setSelectedFlight } /> */}
-      {/* <MyGlobe />  */}
-      <GlobeScene onSelectFlight = {setSelectedFlight} />
+      <MyGlobe /> 
 
       <GlassCard
         title = { selectedFlight ? 'Flight Selected' : 'Explore Live Airspace' }
