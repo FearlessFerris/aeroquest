@@ -7,7 +7,7 @@ import mapboxgl from 'mapbox-gl';
 
 // Components & Necessary Files 
 import { handleFlightClickProperties } from './globe.utils';
-import { LAYERS } from './globe.utils';
+import { LAYERS, toFeatureCollection } from './globe.utils';
 
 
 // Mapbox Initialization 
@@ -15,9 +15,10 @@ export function MapboxInitialization({
     accessToken, 
     containerEl, 
     informationSource,
-    informationSourceState,
+    onSelectedFlight,
 }){ 
     mapboxgl.accessToken = accessToken; 
+
     const map = new mapboxgl.Map({ 
         container: containerEl, 
         center: [-90, 34],
@@ -27,44 +28,32 @@ export function MapboxInitialization({
         antialias: true, 
         cooperativeGestures: false,
     }); 
-
+    
     map.on('style.load', ()=>{ 
-        if(!informationSourceState.airlines && !map.getSource('airlines')){ 
-            map.addSource(LAYERS.airlines.sourceId,{
-                type: 'geojson',
-                data: informationSource,
-            });
-            
-        }
-        if(!informationSourceState.airports && !map.getSource('airports')){
-            map.addSource('airports',{
-                type: 'geojson',
-                data: informationSource, 
-            });
-        }
-        if(!informationSourceState.flights && !map.getSource('flights')){ 
-            map.addSource('flights',{ 
-                type: 'geojson',
-                data: informationSource,
-            });
-            map.addLayer({
-                id: 'flights-marker',
-                type: 'circle',
-                source: 'flights',
-                paint: {
+        Object.entries(LAYERS).forEach(([layerName, layerConfig]) =>{ 
+            const geojson = toFeatureCollection(informationSource?.[layerName]);
+            console.log(geojson);
+            if(!map.getSource(layerConfig.sourceId)){ 
+                map.addSource(layerConfig.sourceId,{ 
+                    type: 'geojson',
+                    data: geojson
+                });
+            }
 
-                },
-            });
-        }
-        map.addInteraction('flights-marker-click',{
-            type: 'click',
-            target: {layerId: 'flights-marker'},
-            handler: (e)=>{ 
-                console.log('You Clicked Me!!!');
-                const p = e.feature?.properties;
-                const selectedFlight = handleFlightClickProperties(p)
-                console.log(selectedFlight);
-            },
+            if(!map.getLayer(layerConfig.layer.id)){ 
+                map.addLayer(layerConfig.layer);
+            }
         });
+    });
+
+    const flightLayerId = LAYERS.flights.layer.id; 
+    map.on('click', flightLayerId, (e)=>{ 
+        const feature = e.features?.[0];
+        const p = feature?.properties;
+        if(!p) return; 
+        const selectedFlight = handleFlightClickProperties(p);
+        onSelectedFlight(selectedFlight);
+        console.log('Selected Flight Properties: ', selectedFlight);
     })
+   
 }

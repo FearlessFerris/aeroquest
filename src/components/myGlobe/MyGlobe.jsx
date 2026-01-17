@@ -9,22 +9,17 @@ import { useEffect, useRef, useState } from 'react';
 // Components & Necessary Files 
 import { myGlobeSx } from '@/styles/components/myGlobe.styles';
 import { MapboxInitialization } from './mapboxInitialization';
-import { DEMO_FLIGHTS_JSON } from '../globe/globe.utils';
-import GlobeInformationDisplay from '../myGlobe/GlobeInformationDisplay'; 
+import { updateMapInformationSource } from './mapbox.utils';
+import { LAYERS, informationSourceJSON } from './globe.utils';
 
 
 // Globe Component
 export default function Globe({ 
-
+    setSelectedFlight,
 }){ 
-    const features = DEMO_FLIGHTS_JSON;
     const containerRef = useRef(null); 
     const mapRef = useRef(null); 
-    const [ informationSourceState, setInformationSourceState ] = useState({ 
-        airlines: false, 
-        airports: false, 
-        flights: false, 
-    })
+    const [ informationSource, setInformationSource ] = useState(informationSourceJSON)
     useEffect(() => { 
         if(!containerRef.current) return;
         if(mapRef.current) return; 
@@ -33,17 +28,22 @@ export default function Globe({
         const map = MapboxInitialization({ 
             accessToken: token, 
             containerEl: containerRef.current,
-            informationSource: features,
-            informationSourceState: informationSourceState,
+            informationSource: informationSource, 
+            onSelectedFlight: setSelectedFlight,
         });
 
         mapRef.current = map
 
         return () => {
-            map.remove();
+            mapRef?.current?.remove(); 
             mapRef.current = null;
         };
-    }, []);
+    }, [setSelectedFlight]);
+    useEffect(()=>{ 
+        if(!mapRef.current) return; 
+        updateMapInformationSource(mapRef.current, informationSource);
+    },[informationSource]);
+
     return( 
         <Box sx={myGlobeSx.root}> 
             <Box ref={containerRef} sx={myGlobeSx.map} />

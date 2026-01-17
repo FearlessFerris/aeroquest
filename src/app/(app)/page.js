@@ -9,11 +9,11 @@ import MyGlobe from '../../components/myGlobe/MyGlobe';
 
 
 export default function AppHomePage() {
-  const [selectedFlight, setSelectedFlight] = useState(null);
+  const [selectedFlight, setSelectedFlight]=useState(null); 
 
   return (
     <Box sx = {{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-      <MyGlobe /> 
+      <MyGlobe setSelectedFlight={setSelectedFlight}/> 
 
       <GlassCard
         title = { selectedFlight ? 'Flight Selected' : 'Explore Live Airspace' }
