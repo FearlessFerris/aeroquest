@@ -15,7 +15,7 @@ import { LAYERS, informationSourceJSON } from './globe.utils';
 
 // Globe Component
 export default function Globe({ 
-    setSelectedFlight,
+    setSelectedInformation,
 }){ 
     const containerRef = useRef(null); 
     const mapRef = useRef(null); 
@@ -29,7 +29,7 @@ export default function Globe({
             accessToken: token, 
             containerEl: containerRef.current,
             informationSource: informationSource, 
-            onSelectedFlight: setSelectedFlight,
+            onSelectedInformation: setSelectedInformation,
         });
 
         mapRef.current = map
@@ -38,7 +38,7 @@ export default function Globe({
             mapRef?.current?.remove(); 
             mapRef.current = null;
         };
-    }, [setSelectedFlight]);
+    }, [setSelectedInformation]);
     useEffect(()=>{ 
         if(!mapRef.current) return; 
         updateMapInformationSource(mapRef.current, informationSource);

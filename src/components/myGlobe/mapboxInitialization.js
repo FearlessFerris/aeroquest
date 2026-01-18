@@ -6,7 +6,7 @@ import mapboxgl from 'mapbox-gl';
 
 
 // Components & Necessary Files 
-import { handleFlightClickProperties } from './globe.utils';
+import { handleClickProperties } from './globe.utils';
 import { LAYERS, toFeatureCollection } from './globe.utils';
 
 
@@ -15,7 +15,7 @@ export function MapboxInitialization({
     accessToken, 
     containerEl, 
     informationSource,
-    onSelectedFlight,
+    onSelectedInformation,
 }){ 
     mapboxgl.accessToken = accessToken; 
 
@@ -46,14 +46,34 @@ export function MapboxInitialization({
         });
     });
 
+    const airlineLayerId = LAYERS.airlines.layer.id;
+    const airportLayerId = LAYERS.airports.layer.id;  
     const flightLayerId = LAYERS.flights.layer.id; 
+   
+    map.on('click', airlineLayerId, (e)=> { 
+        const feature = e.features?.[0]
+        const p = feature?.properties; 
+        if(!p) return
+        const selectedAirline = handleClickProperties(p)
+        onSelectedInformation(selectedAirline);
+        console.log('Selected Airline Properties: ', selectedAirline);
+    })
+
     map.on('click', flightLayerId, (e)=>{ 
         const feature = e.features?.[0];
         const p = feature?.properties;
         if(!p) return; 
-        const selectedFlight = handleFlightClickProperties(p);
-        onSelectedFlight(selectedFlight);
+        const selectedFlight = handleClickProperties(p);
+        onSelectedInformation(selectedFlight);
         console.log('Selected Flight Properties: ', selectedFlight);
+    });
+
+    map.on('click', airportLayerId, (e)=>{
+        const feature = e.features?.[0];
+        const p = feature?.properties;
+        if(!p) return;
+        const selectedAirport = handleClickProperties(p);
+        onSelectedInformation(selectedAirport);
+        console.log('Selected Airport Properties: ', selectedAirport);
     })
-   
 }

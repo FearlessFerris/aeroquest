@@ -9,13 +9,13 @@ import MyGlobe from '../../components/myGlobe/MyGlobe';
 
 
 export default function AppHomePage() {
-  const [selectedFlight, setSelectedFlight]=useState(null); 
+  const [selectedInformation, setSelectedInformation] = useState(null); 
 
   return (
     <Box sx = {{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-      <MyGlobe setSelectedFlight={setSelectedFlight}/> 
+      <MyGlobe setSelectedInformation={setSelectedInformation}/> 
 
-      <GlassCard
+      {/* <GlassCard
         title = { selectedFlight ? 'Flight Selected' : 'Explore Live Airspace' }
         subtitle = {
           selectedFlight
@@ -28,7 +28,7 @@ export default function AppHomePage() {
             ? `Altitude: ${selectedFlight.altitude.toLocaleString()} ft • Speed: ${selectedFlight.speed} kts`
             : 'Next: add filters, hover inspect, and a right-side glass panel for deep details.'}
         </Typography>
-      </GlassCard>
+      </GlassCard> */}
     </Box>
   );
 }
