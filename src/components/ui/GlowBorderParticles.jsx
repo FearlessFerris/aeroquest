@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useRef } from 'react';
 
 function hexToRgb(hex) {
-  const h = hex.replace('#', '').trim();
+  const h = (hex || '').replace('#', '').trim();
   const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
-  const n = parseInt(full, 16);
+  const n = parseInt(full || '000000', 16);
   return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
 }
 
@@ -16,26 +16,36 @@ function clamp(n, a, b) {
 export default function GlowBorderParticles({
   color = '#f5e9cf',
 
-  // feel knobs
+  // Feel knobs
   density = 1.0,
   intensity = 1.0,
   outward = 1.0,
-  gravity = 0.45,
-  blur = 10,
+  gravity = 0.25,
+  blur = 6,
 
-  // ember look
-  sizeRange = [0.8, 2.2],
+  // Ember look
+  sizeRange = [0.8, 1.4],
   speedRange = [0.35, 1.35],
   lifeRange = [38, 92],
 
-  // layout knobs
-  inset = 0,
-  expand = 0,     // how far canvas extends outside the parent
-  clip = false,   // clip to rounded corners or let particles leave
+  // Layout knobs
+  inset = 0,          // extra padding from the edge (in canvas space)
+  clip = false,       // clip to rounded rect
+  spawnInset = 0,     // offsets the spawn ring inward/outward (use this to align to border)
 
-  // performance knobs
-  fps = 24,       // 👈 huge win: throttle particle loop
-  dprMax = 1.55,  // 👈 cap device pixel ratio for perf (1.5–2 is a good range)
+  // Performance knobs
+  fps = 24,
+  dprMax = 1.15,
+
+  // NEW perf knobs
+  maxParticles = 200,        // hard cap
+  composite = 'screen',      // 'lighter' is heavier; 'screen' looks similar
+  blurEvery = 3,             // blur 1 out of N particles
+  pauseWhenHidden = true,    // stop animating when tab is hidden
+  paused = false,            // manual pause switch (optional)
+
+  // Rounded-rect clip radius in px (match your shell). If null, uses 36px.
+  radiusPx = 36,
 
   className,
   style,
@@ -59,28 +69,25 @@ export default function GlowBorderParticles({
     const parent = canvas.parentElement;
     if (!parent) return;
 
-    // If user has reduced-motion on, don't animate particles.
+    // Respect reduced motion
     const reduceMotion =
       typeof window !== 'undefined' &&
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     if (reduceMotion) return;
 
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
-
     ctxRef.current = ctx;
 
     const rand = (a, b) => a + Math.random() * (b - a);
 
     const resize = () => {
       const rect = parent.getBoundingClientRect();
-
       const dpr = clamp(window.devicePixelRatio || 1, 1, dprMax);
 
-      const w = Math.max(1, Math.floor(rect.width + expand * 2));
-      const h = Math.max(1, Math.floor(rect.height + expand * 2));
+      const w = Math.max(1, Math.floor(rect.width));
+      const h = Math.max(1, Math.floor(rect.height));
 
       sizeRef.current = { w, h, dpr };
 
@@ -98,11 +105,33 @@ export default function GlowBorderParticles({
     ro.observe(parent);
     roRef.current = ro;
 
+    let isHiddenPaused = false;
+
+    const onVis = () => {
+      if (!pauseWhenHidden) return;
+      isHiddenPaused = document.visibilityState !== 'visible';
+    };
+
+    if (pauseWhenHidden && typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', onVis);
+      onVis();
+    }
+
+    const drawClippedRoundedRect = (ctx2, w, h) => {
+      const radius = clamp(radiusPx ?? 36, 0, Math.min(w, h) / 2);
+
+      ctx2.beginPath();
+      ctx2.moveTo(radius, 0);
+      ctx2.arcTo(w, 0, w, h, radius);
+      ctx2.arcTo(w, h, 0, h, radius);
+      ctx2.arcTo(0, h, 0, 0, radius);
+      ctx2.arcTo(0, 0, w, 0, radius);
+      ctx2.closePath();
+    };
+
     const spawnFromPerimeter = (count) => {
       const { w, h } = sizeRef.current;
-
-      const innerW = w - expand * 2;
-      const innerH = h - expand * 2;
+      const pad = inset + spawnInset;
 
       for (let i = 0; i < count; i += 1) {
         const edge = Math.floor(Math.random() * 4);
@@ -113,40 +142,40 @@ export default function GlowBorderParticles({
         let ny = 0;
 
         if (edge === 0) {
-          x = rand(0 + inset, innerW - inset);
-          y = 0 + inset;
+          // top
+          x = rand(pad, w - pad);
+          y = pad;
           nx = 0;
           ny = -1;
         } else if (edge === 1) {
-          x = innerW - inset;
-          y = rand(0 + inset, innerH - inset);
+          // right
+          x = w - pad;
+          y = rand(pad, h - pad);
           nx = 1;
           ny = 0;
         } else if (edge === 2) {
-          x = rand(0 + inset, innerW - inset);
-          y = innerH - inset;
+          // bottom
+          x = rand(pad, w - pad);
+          y = h - pad;
           nx = 0;
           ny = 1;
         } else {
-          x = 0 + inset;
-          y = rand(0 + inset, innerH - inset);
+          // left
+          x = pad;
+          y = rand(pad, h - pad);
           nx = -1;
           ny = 0;
         }
 
-        // offset into expanded canvas space
-        x += expand;
-        y += expand;
-
         const speed = rand(speedRange[0], speedRange[1]) * outward;
 
-        // tangential variation for "ember drift"
+        // tangential drift
         const tx = -ny;
         const ty = nx;
         const tangent = rand(-1.0, 1.0);
 
         const vx = nx * speed + tx * tangent * 0.35;
-        const vy = ny * speed + ty * tangent * 0.20 + rand(0.05, 0.28) * gravity;
+        const vy = ny * speed + ty * tangent * 0.2 + rand(0.02, 0.18) * gravity;
 
         particlesRef.current.push({
           x,
@@ -161,28 +190,18 @@ export default function GlowBorderParticles({
       }
     };
 
-    const drawClippedRoundedRect = (ctx2, w, h) => {
-      // ~2.2rem @ 16px base
-      const radius = 36;
-
-      ctx2.beginPath();
-      ctx2.moveTo(radius, 0);
-      ctx2.arcTo(w, 0, w, h, radius);
-      ctx2.arcTo(w, h, 0, h, radius);
-      ctx2.arcTo(0, h, 0, 0, radius);
-      ctx2.arcTo(0, 0, w, 0, radius);
-      ctx2.closePath();
-    };
-
     const frameMs = 1000 / clamp(fps, 12, 60);
 
     const step = (now) => {
       rafRef.current = requestAnimationFrame(step);
 
+      if (paused) return;
+      if (isHiddenPaused) return;
+
       const { w, h } = sizeRef.current;
       if (!w || !h) return;
 
-      // Throttle to target fps (big perf win)
+      // Throttle to target fps
       const t = timeRef.current;
       if (!t.last) t.last = now;
       const delta = now - t.last;
@@ -197,25 +216,28 @@ export default function GlowBorderParticles({
         ctx.clip();
       }
 
-      // additive glow
-      ctx.globalCompositeOperation = 'lighter';
+      // Composite mode (screen is cheaper than lighter and similar-looking)
+      ctx.globalCompositeOperation = composite;
 
-      // spawn rate based on perimeter (consistent feel across sizes)
+      // Spawn rate based on perimeter
       const perimeter = (w + h) * 2;
-      const baseRate = perimeter / 900;
-
-      // Slightly clamp max spawns so it never explodes on huge screens
-      const spawnCount = Math.floor(clamp(baseRate * density, 0.35, 6.0) + Math.random());
+      const baseRate = perimeter / 950; // slightly lower by default
+      const spawnCount = Math.floor(clamp(baseRate * density, 0.25, 4.5) + Math.random());
       spawnFromPerimeter(spawnCount);
+
+      // Hard cap particle count
+      if (particlesRef.current.length > maxParticles) {
+        particlesRef.current.splice(0, particlesRef.current.length - maxParticles);
+      }
 
       const next = [];
       let i = 0;
 
-      // Precompute a softened blur (blur is expensive; don't overdo it)
-      const glowBlur = clamp(blur, 0, 20);
+      const glowBlur = clamp(blur, 0, 18);
 
       for (const p of particlesRef.current) {
         i += 1;
+
         p.age += 1;
         if (p.age >= p.life) continue;
 
@@ -224,27 +246,24 @@ export default function GlowBorderParticles({
 
         const t2 = p.age / p.life;
         const alpha = (1 - t2) * 0.95 * intensity;
-
         const tw = 0.75 + Math.sin(p.age * 0.35 + p.tw * 10) * 0.25;
 
-        // Performance trick:
-        // blur only every other particle (still looks basically identical)
-        const doBlur = (i & 1) === 0 && glowBlur > 0;
+        // Blur only every Nth particle (big perf win)
+        const doBlur = glowBlur > 0 && (i % blurEvery === 0);
 
-        // 1) glow pass
         if (doBlur) {
           ctx.filter = `blur(${glowBlur}px)`;
-          ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha * tw * 0.55})`;
+          ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha * tw * 0.5})`;
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.r * 1.2, 0, Math.PI * 2);
           ctx.fill();
         }
 
-        // 2) crisp core dot (the “ember” you actually see)
+        // crisp ember core
         ctx.filter = 'none';
         ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha * tw})`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(0.6, p.r * 0.55), 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, Math.max(0.55, p.r * 0.55), 0, Math.PI * 2);
         ctx.fill();
 
         next.push(p);
@@ -253,7 +272,6 @@ export default function GlowBorderParticles({
       particlesRef.current = next;
 
       ctx.globalCompositeOperation = 'source-over';
-
       if (clip) ctx.restore();
     };
 
@@ -266,7 +284,10 @@ export default function GlowBorderParticles({
       if (roRef.current) roRef.current.disconnect();
       roRef.current = null;
 
-      // Clear refs
+      if (pauseWhenHidden && typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', onVis);
+      }
+
       particlesRef.current = [];
       ctxRef.current = null;
       timeRef.current.last = 0;
@@ -281,29 +302,40 @@ export default function GlowBorderParticles({
     gravity,
     blur,
     inset,
-    expand,
     clip,
+    spawnInset,
+    fps,
+    dprMax,
+    maxParticles,
+    composite,
+    blurEvery,
+    pauseWhenHidden,
+    paused,
+    radiusPx,
     sizeRange,
     speedRange,
     lifeRange,
-    fps,
-    dprMax,
   ]);
 
   return (
-    <canvas
-      ref = {canvasRef}
-      className = {className}
-      style = {{
-        position: 'absolute',
-        top: -expand,
-        left: -expand,
-        pointerEvents: 'none',
-        zIndex: 6,
-        willChange: 'transform',
-        transform: 'translateZ(0)',
-        ...style,
-      }}
-    />
-  );
+  <canvas
+    ref = {canvasRef}
+    className = {className}
+    style = {{
+      position: 'absolute',
+      inset: 0,
+      width: '100%',
+      height: '100%',
+      pointerEvents: 'none',
+      zIndex: 0,
+
+      // 👇 soft fade out around the whole canvas so it blends into the page
+      WebkitMaskImage: 'radial-gradient(closest-side, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)',
+      maskImage: 'radial-gradient(closest-side, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)',
+
+      ...style,
+    }}
+  />
+);
+
 }
