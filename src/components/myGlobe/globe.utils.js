@@ -8,47 +8,47 @@
 
 
 // Globe Utilities 
-// export const LAYERS = { 
-//     airlines: { 
-//         sourceId: 'airlines',
-//         layerId: 'airlines-marker',
-//         layer:{ 
-//             id: 'airlines-marker',
-//             type: 'circle',
-//             source: 'airlines',
-//             paint:{
-//                 'circle-radius': 4,
-//                 'circle-opacity': 0.75,
-//             }
-//         },
-//     },
-//     airports: { 
-//         sourceId: 'airports',
-//         layerId: 'airports-marker',
-//         layer:{ 
-//             id: 'airports-marker',
-//             type: 'circle',
-//             source: 'airports',
-//             paint: { 
-//                  'circle-radius': 5,
-//                 'circle-opacity': 0.85,
-//             }
-//         },
-//     },
-//     flights:{ 
-//         sourceId: 'flights',
-//         layerId: 'flights-marker',
-//         layer:{ 
-//             id: 'flights-marker',
-//             type: 'circle', 
-//             source: 'flights',
-//             paint: {
-//                 'circle-radius': 4,
-//                 'circle-opacity': 0.9,
-//             }
-//         },
-//     }
-// }
+export const LAYERS = { 
+    airlines: { 
+        sourceId: 'airlines',
+        layerId: 'airlines-marker',
+        layer:{ 
+            id: 'airlines-marker',
+            type: 'circle',
+            source: 'airlines',
+            paint:{
+                'circle-radius': 4,
+                'circle-opacity': 0.75,
+            }
+        },
+    },
+    airports: { 
+        sourceId: 'airports',
+        layerId: 'airports-marker',
+        layer:{ 
+            id: 'airports-marker',
+            type: 'circle',
+            source: 'airports',
+            paint: { 
+                 'circle-radius': 5,
+                'circle-opacity': 0.85,
+            }
+        },
+    },
+    flights:{ 
+        sourceId: 'flights',
+        layerId: 'flights-marker',
+        layer:{ 
+            id: 'flights-marker',
+            type: 'circle', 
+            source: 'flights',
+            paint: {
+                'circle-radius': 4,
+                'circle-opacity': 0.9,
+            }
+        },
+    }
+}
 
 export const informationSourceJSON = {
   airlines: {
@@ -191,54 +191,31 @@ export const informationSourceJSON = {
 };
 
 
-// export const toFeatureCollection = (input)=>{ 
-//     if(!input){ 
-//         return{ 
-//             type:'FeatureCollection',
-//             features:[],
-//         }
-//     }
-//     if(input.type === 'FeatureCollection'){ 
-//         return input; 
-//     }
-//     if(Array.isArray(input)){
-//         return{ 
-//             type:'FeatureCollection',
-//             features:input,
-//         }
-//     }
-//     return{ 
-//         type:'FeatureCollection',
-//         features:[]
-//     }
-// }
+export const toFeatureCollection = (input)=>{ 
+    if(input?.type === 'FeatureCollection' && Array.isArray(input.features)){ 
+      return input; 
+    }
+    if(!input){ 
+        return{ 
+            type:'FeatureCollection',
+            features:[],
+        }
+    }
+    if(input?.type === 'FeatureCollection'){ 
+        return input; 
+    }
+    if(Array.isArray(input)){
+        return{ 
+            type:'FeatureCollection',
+            features:input,
+        }
+    }
+    return{ 
+        type:'FeatureCollection',
+        features:[]
+    }
+}
 
-// export function normalizeToFeatureCollection(input) {
-//   // If it's already a FeatureCollection
-//   if (input?.type === 'FeatureCollection' && Array.isArray(input.features)) {
-//     return input;
-//   }
-
-//   // If it's a single Feature
-//   if (input?.type === 'Feature') {
-//     return { type: 'FeatureCollection', features: [input] };
-
-//   }
-
-//   // If it's an array of Features
-//   if (Array.isArray(input)) {
-//     return {
-//       type: 'FeatureCollection',
-//       features: input.filter((f) => f && f.type === 'Feature'),
-//     };
-//   }
-
-//   // Fallback (prevents Mapbox crash)
-//   return { type: 'FeatureCollection', features: [] };
-// }
-
-// mapbox.utils.js
-// import { LAYERS, normalizeToFeatureCollection } from './globe.utils';
 
 export function updateMapInformationSource(map, informationSource) {
   if (!map || !informationSource) return;
@@ -254,34 +231,34 @@ export function updateMapInformationSource(map, informationSource) {
 
 
 
-// const handlers = { 
-//     airline: (p)=>({ 
-//         type: 'airline', 
-//         airlineCode: p.airlineCode, 
-//         airlineName: p.airlineName,
-//         country: p.country,
-//     }),
+const handlers = { 
+    airline: (p)=>({ 
+        type: 'airline', 
+        airlineCode: p.airlineCode, 
+        airlineName: p.airlineName,
+        country: p.country,
+    }),
 
-//     airport: (p)=>({ 
-//         type: 'airport',
-//         airportCode: p.airportCode, 
-//         airportName: p.airportName, 
-//         city: p.city, 
-//         country: p.country, 
-//     }),
+    airport: (p)=>({ 
+        type: 'airport',
+        airportCode: p.airportCode, 
+        airportName: p.airportName, 
+        city: p.city, 
+        country: p.country, 
+    }),
 
-//     flight: (p)=>({ 
-//         type: 'flight',
-//         id: p.id, 
-//         callsign: p.callsign, 
-//         airline: p.airline, 
-//         airlineCode: p.airlineCode, 
-//         origin: p.origin, 
-//         destination: p.destination, 
-//         altitude: p.altitude, 
-//         speed: p.speed, 
-//     }),
-// };
+    flight: (p)=>({ 
+        type: 'flight',
+        id: p.id, 
+        callsign: p.callsign, 
+        airline: p.airline, 
+        airlineCode: p.airlineCode, 
+        origin: p.origin, 
+        destination: p.destination, 
+        altitude: p.altitude, 
+        speed: p.speed, 
+    }),
+};
 // export const handlers = {
 //   airline: (p) => ({
 //     type: 'airline',
@@ -312,99 +289,99 @@ export function updateMapInformationSource(map, informationSource) {
 // export const handleClickProperties = (p ={}) => 
 //     handlers[p.featureType]?.(p) ?? null; 
 
-export const LAYERS = {
-  airlines: {
-    sourceId: 'airlines',
-    layerId: 'airlines-layer',
-    type: 'circle',
-  },
-  airports: {
-    sourceId: 'airports',
-    layerId: 'airports-layer',
-    type: 'circle',
-  },
-  flights: {
-    sourceId: 'flights',
-    layerId: 'flights-layer',
-    type: 'circle',
-  },
-};
+// export const LAYERS = {
+//   airlines: {
+//     sourceId: 'airlines',
+//     layerId: 'airlines-layer',
+//     type: 'circle',
+//   },
+//   airports: {
+//     sourceId: 'airports',
+//     layerId: 'airports-layer',
+//     type: 'circle',
+//   },
+//   flights: {
+//     sourceId: 'flights',
+//     layerId: 'flights-layer',
+//     type: 'circle',
+//   },
+// };
 
 // globe.utils.js
 
-export const toFeatureCollection = (input) => {
-  const empty = { type: 'FeatureCollection', features: [] };
+// export const toFeatureCollection = (input) => {
+//   const empty = { type: 'FeatureCollection', features: [] };
 
-  if (!input) return empty;
+//   if (!input) return empty;
 
-  // Already a FeatureCollection
-  if (input.type === 'FeatureCollection' && Array.isArray(input.features)) {
-    return {
-      type: 'FeatureCollection',
-      features: input.features
-        .filter(Boolean)
-        .filter((f) => f.type === 'Feature')
-        .filter((f) => f.geometry && typeof f.geometry.type === 'string')
-        .filter((f) => {
-          // Validate Point coords when applicable
-          if (f.geometry.type !== 'Point') return true;
-          const c = f.geometry.coordinates;
-          if (!Array.isArray(c) || c.length < 2) return false;
-          const lng = Number(c[0]);
-          const lat = Number(c[1]);
-          return Number.isFinite(lng) && Number.isFinite(lat);
-        }),
-    };
-  }
+//   // Already a FeatureCollection
+//   if (input.type === 'FeatureCollection' && Array.isArray(input.features)) {
+//     return {
+//       type: 'FeatureCollection',
+//       features: input.features
+//         .filter(Boolean)
+//         .filter((f) => f.type === 'Feature')
+//         .filter((f) => f.geometry && typeof f.geometry.type === 'string')
+//         .filter((f) => {
+//           // Validate Point coords when applicable
+//           if (f.geometry.type !== 'Point') return true;
+//           const c = f.geometry.coordinates;
+//           if (!Array.isArray(c) || c.length < 2) return false;
+//           const lng = Number(c[0]);
+//           const lat = Number(c[1]);
+//           return Number.isFinite(lng) && Number.isFinite(lat);
+//         }),
+//     };
+//   }
 
-  // Single Feature
-  if (input.type === 'Feature') {
-    return toFeatureCollection({ type: 'FeatureCollection', features: [input] });
-  }
+//   // Single Feature
+//   if (input.type === 'Feature') {
+//     return toFeatureCollection({ type: 'FeatureCollection', features: [input] });
+//   }
 
-  // Array of Features (or mixed)
-  if (Array.isArray(input)) {
-    return toFeatureCollection({ type: 'FeatureCollection', features: input });
-  }
+//   // Array of Features (or mixed)
+//   if (Array.isArray(input)) {
+//     return toFeatureCollection({ type: 'FeatureCollection', features: input });
+//   }
 
-  // Unknown shape -> safe fallback
-  return empty;
-};
+//   // Unknown shape -> safe fallback
+//   return empty;
+// };
 
-/**
- * This is the “handlers” pattern you asked about:
- * featureType -> transformer
- */
-const handlers = {
-  airline: (p) => ({
-    featureType: 'airline',
-    airlineCode: p.airlineCode ?? null,
-    airlineName: p.airlineName ?? null,
-    country: p.country ?? null,
-    lng: p.lng,
-    lat: p.lat,
-  }),
-  airport: (p) => ({
-    featureType: 'airport',
-    airportCode: p.airportCode ?? null,
-    airportName: p.airportName ?? null,
-    city: p.city ?? null,
-    country: p.country ?? null,
-    lng: p.lng,
-    lat: p.lat,
-  }),
-  flight: (p) => ({
-    featureType: 'flight',
-    id: p.id ?? null,
-    callsign: p.callsign ?? null,
-    airline: p.airline ?? null,
-    airlineCode: p.airlineCode ?? null,
-    origin: p.origin ?? null,
-    destination: p.destination ?? null,
-    lng: p.lng,
-    lat: p.lat,
-  }),
-};
+// /**
+//  * This is the “handlers” pattern you asked about:
+//  * featureType -> transformer
+//  */
+// const handlers = {
+//   airline: (p) => ({
+//     featureType: 'airline',
+//     airlineCode: p.airlineCode ?? null,
+//     airlineName: p.airlineName ?? null,
+//     country: p.country ?? null,
+//     lng: p.lng,
+//     lat: p.lat,
+//   }),
+//   airport: (p) => ({
+//     featureType: 'airport',
+//     airportCode: p.airportCode ?? null,
+//     airportName: p.airportName ?? null,
+//     city: p.city ?? null,
+//     country: p.country ?? null,
+//     lng: p.lng,
+//     lat: p.lat,
+//   }),
+//   flight: (p) => ({
+//     featureType: 'flight',
+//     id: p.id ?? null,
+//     callsign: p.callsign ?? null,
+//     airline: p.airline ?? null,
+//     airlineCode: p.airlineCode ?? null,
+//     origin: p.origin ?? null,
+//     destination: p.destination ?? null,
+//     lng: p.lng,
+//     lat: p.lat,
+//   }),
+// };
 
 
 export const handleClickProperties = (p = {}) =>

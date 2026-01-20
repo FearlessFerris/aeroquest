@@ -89,47 +89,47 @@
 
 // mapbox.motion.js
 
-export function stopAllCamera(map) {
-  try {
-    map.stop();
-  } catch (_) {}
-}
+// export function stopAllCamera(map) {
+//   try {
+//     map.stop();
+//   } catch (_) {}
+// }
 
-export function applyLuxuryControls(map) {
-  // Smooth feel (esp. on trackpads)
-  map.dragRotate.enable();
-  map.touchZoomRotate.enableRotation();
+// export function applyLuxuryControls(map) {
+//   // Smooth feel (esp. on trackpads)
+//   map.dragRotate.enable();
+//   map.touchZoomRotate.enableRotation();
 
-  // Gentle defaults
-  map.setPitch(18);
-  map.setBearing(0);
-}
+//   // Gentle defaults
+//   map.setPitch(18);
+//   map.setBearing(0);
+// }
 
-/**
- * Fly to a clicked feature with a nice easing curve.
- */
-export function focusSelection(map, { lng, lat, featureType }) {
-  if (!map || typeof lng !== 'number' || typeof lat !== 'number') return;
+// /**
+//  * Fly to a clicked feature with a nice easing curve.
+//  */
+// export function focusSelection(map, { lng, lat, featureType }) {
+//   if (!map || typeof lng !== 'number' || typeof lat !== 'number') return;
 
-  const targetZoom =
-    featureType === 'flight' ? 6.2 :
-    featureType === 'airport' ? 5.2 :
-    4.8;
+//   const targetZoom =
+//     featureType === 'flight' ? 6.2 :
+//     featureType === 'airport' ? 5.2 :
+//     4.8;
 
-  // Slight offset so the selected point sits in a “hero” position
-  // (Mapbox expects pixel offset)
-  const offset = [0, 90];
+//   // Slight offset so the selected point sits in a “hero” position
+//   // (Mapbox expects pixel offset)
+//   const offset = [0, 90];
 
-  map.flyTo({
-    center: [lng, lat],
-    zoom: targetZoom,
-    speed: 0.9,        // lower = smoother
-    curve: 1.35,       // higher = more cinematic arc
-    easing: (t) => 1 - Math.pow(1 - t, 3), // easeOutCubic
-    essential: true,
-    offset,
-    pitch: 24,
-    bearing: 0,
-  });
-}
+//   map.flyTo({
+//     center: [lng, lat],
+//     zoom: targetZoom,
+//     speed: 0.9,        // lower = smoother
+//     curve: 1.35,       // higher = more cinematic arc
+//     easing: (t) => 1 - Math.pow(1 - t, 3), // easeOutCubic
+//     essential: true,
+//     offset,
+//     pitch: 24,
+//     bearing: 0,
+//   });
+// }
 
