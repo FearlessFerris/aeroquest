@@ -224,165 +224,35 @@ export function updateMapInformationSource(map, informationSource) {
     const src = map.getSource(cfg.sourceId);
     if (!src) return;
 
-    const fc = normalizeToFeatureCollection(informationSource[key]);
+    const fc = toFeatureCollection(informationSource[key]);
     src.setData(fc);
   });
 }
 
-
-
-const handlers = { 
-    airline: (p)=>({ 
-        type: 'airline', 
-        airlineCode: p.airlineCode, 
-        airlineName: p.airlineName,
-        country: p.country,
-    }),
-
-    airport: (p)=>({ 
-        type: 'airport',
-        airportCode: p.airportCode, 
-        airportName: p.airportName, 
-        city: p.city, 
-        country: p.country, 
-    }),
-
-    flight: (p)=>({ 
-        type: 'flight',
-        id: p.id, 
-        callsign: p.callsign, 
-        airline: p.airline, 
-        airlineCode: p.airlineCode, 
-        origin: p.origin, 
-        destination: p.destination, 
-        altitude: p.altitude, 
-        speed: p.speed, 
-    }),
-};
-// export const handlers = {
-//   airline: (p) => ({
-//     type: 'airline',
-//     ...p,
-//   }),
-
-//   airport: (p) => ({
-//     type: 'airport',
-//     lng: Number(p.lng ?? p.longitude),
-//     lat: Number(p.lat ?? p.latitude),
-//     ...p,
-//   }),
-
-//   flight: (p) => ({
-//     type: 'flight',
-//     lng: Number(p.lng ?? p.longitude),
-//     lat: Number(p.lat ?? p.latitude),
-//     ...p,
-//   }),
-// };
-
-// export const handleClickProperties = (p = {}) => {
-//   const ft = p.featureType || p.type || p.kind;
-//   return handlers[ft]?.(p) ?? null;
-// };
-
-
-// export const handleClickProperties = (p ={}) => 
-//     handlers[p.featureType]?.(p) ?? null; 
-
-// export const LAYERS = {
-//   airlines: {
-//     sourceId: 'airlines',
-//     layerId: 'airlines-layer',
-//     type: 'circle',
-//   },
-//   airports: {
-//     sourceId: 'airports',
-//     layerId: 'airports-layer',
-//     type: 'circle',
-//   },
-//   flights: {
-//     sourceId: 'flights',
-//     layerId: 'flights-layer',
-//     type: 'circle',
-//   },
-// };
-
-// globe.utils.js
-
-// export const toFeatureCollection = (input) => {
-//   const empty = { type: 'FeatureCollection', features: [] };
-
-//   if (!input) return empty;
-
-//   // Already a FeatureCollection
-//   if (input.type === 'FeatureCollection' && Array.isArray(input.features)) {
-//     return {
-//       type: 'FeatureCollection',
-//       features: input.features
-//         .filter(Boolean)
-//         .filter((f) => f.type === 'Feature')
-//         .filter((f) => f.geometry && typeof f.geometry.type === 'string')
-//         .filter((f) => {
-//           // Validate Point coords when applicable
-//           if (f.geometry.type !== 'Point') return true;
-//           const c = f.geometry.coordinates;
-//           if (!Array.isArray(c) || c.length < 2) return false;
-//           const lng = Number(c[0]);
-//           const lat = Number(c[1]);
-//           return Number.isFinite(lng) && Number.isFinite(lat);
-//         }),
-//     };
-//   }
-
-//   // Single Feature
-//   if (input.type === 'Feature') {
-//     return toFeatureCollection({ type: 'FeatureCollection', features: [input] });
-//   }
-
-//   // Array of Features (or mixed)
-//   if (Array.isArray(input)) {
-//     return toFeatureCollection({ type: 'FeatureCollection', features: input });
-//   }
-
-//   // Unknown shape -> safe fallback
-//   return empty;
-// };
-
-// /**
-//  * This is the “handlers” pattern you asked about:
-//  * featureType -> transformer
-//  */
-// const handlers = {
-//   airline: (p) => ({
-//     featureType: 'airline',
-//     airlineCode: p.airlineCode ?? null,
-//     airlineName: p.airlineName ?? null,
-//     country: p.country ?? null,
-//     lng: p.lng,
-//     lat: p.lat,
-//   }),
-//   airport: (p) => ({
-//     featureType: 'airport',
-//     airportCode: p.airportCode ?? null,
-//     airportName: p.airportName ?? null,
-//     city: p.city ?? null,
-//     country: p.country ?? null,
-//     lng: p.lng,
-//     lat: p.lat,
-//   }),
-//   flight: (p) => ({
-//     featureType: 'flight',
-//     id: p.id ?? null,
-//     callsign: p.callsign ?? null,
-//     airline: p.airline ?? null,
-//     airlineCode: p.airlineCode ?? null,
-//     origin: p.origin ?? null,
-//     destination: p.destination ?? null,
-//     lng: p.lng,
-//     lat: p.lat,
-//   }),
-// };
-
-
-export const handleClickProperties = (p = {}) =>
-  handlers[p.featureType]?.(p) ?? null;
+export function attachMapClickHandler(map, LAYERS, onSelectedInformation){ 
+  const convertIdToType = Object.fromEntries(Object.entries(LAYERS).map(([type, cfg]) => [cfg.layer.id, type]));
+  const layerIds = Object.values(LAYERS).map((value) => value?.layer?.id);
+  const onClick = (e) => { 
+    const features = map.queryRenderedFeatures(e.point,{ // Tricky little bugger, if not using map.on you must create the features property 
+      layers: layerIds,                                  // 
+    });
+    const feature = features?.[0];
+    if(!feature?.properties) return; 
+    const type = convertIdToType[feature.layer.id]; 
+    if(!type) return; 
+    const payload = { 
+      type, 
+      layerId: feature.layer.id,
+      source: feature.source, 
+      lngLat: e.lngLat,
+      raw: feature.properties, 
+      id: feature.id ?? feature.properties.id, 
+    };
+    onSelectedInformation(payload);
+  };
+  map.on('click', onClick);
+  return ()=>{ 
+    map.off('click', onClick); 
+  }
+}
+  
