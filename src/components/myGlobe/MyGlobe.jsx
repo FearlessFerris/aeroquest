@@ -85,7 +85,9 @@ import GlowBorderParticles from '../ui/GlowBorderParticles';
 
 // }
 
+// Something  
 
+// some more code here for good measure
 
 export default function Globe({ 
   setSelectedInformation,
@@ -105,7 +107,7 @@ export default function Globe({
   }, [setSelectedInformation]); 
 
   mapRef.current = map; 
-  
+
   const EXPAND = 200; 
 return (
     <Box sx={{ position: 'relative' }}>
