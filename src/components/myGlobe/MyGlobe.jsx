@@ -85,9 +85,6 @@ import GlowBorderParticles from '../ui/GlowBorderParticles';
 
 // }
 
-// Something  
-
-// some more code here for good measure
 
 export default function Globe({ 
   setSelectedInformation,
