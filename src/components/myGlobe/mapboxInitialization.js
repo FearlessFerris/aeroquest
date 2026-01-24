@@ -6,7 +6,7 @@ import mapboxgl from 'mapbox-gl';
 
 
 // Components & Necessary Files 
-import { LAYERS, toFeatureCollection, attachMapClickHandler, attachMapHoverHandler } from './globe.utils';
+import { LAYERS, toFeatureCollection, attachMapClickHandler, attachMapMouseMoveHandler } from './globe.utils';
 
 
 // Mapbox Initialization 
@@ -19,7 +19,7 @@ export function MapboxInitialization({
 }){ 
     mapboxgl.accessToken = accessToken; 
     let detachMapClickHandler;
-    let detachMapHoverHandler; 
+    let detachMapMouseMoveHandler; 
     const map = new mapboxgl.Map({ 
         container: containerEl, 
         center: [-90, 34],
@@ -46,11 +46,11 @@ export function MapboxInitialization({
     });
 
     detachMapClickHandler = attachMapClickHandler(map, LAYERS, onSelectedInformation); 
-    detachMapHoverHandler = attachMapHoverHandler(map, LAYERS, onSetHoverInformation); 
+    detachMapMouseMoveHandler = attachMapMouseMoveHandler(map, LAYERS, onSetHoverInformation); 
 
     const clean = ()=>{ 
       if(detachMapClickHandler) detachMapClickHandler(); 
-      if(detachMapHoverHandler) detachMapHoverHandler(); 
+      if(detachMapMouseMoveHandler) detachMapMouseMoveHandler(); 
       map.remove(); 
     }
     return{map, clean}

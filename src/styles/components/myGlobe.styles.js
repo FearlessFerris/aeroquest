@@ -17,7 +17,7 @@ export const myGlobeSx = {
 
   // your existing root, clipped
   root: {
-    border: `.2rem solid ${TOKENS.border}`,
+    border: `.2rem solid ${TOKENS.glow}`,
     borderRadius: '2rem',
     height: { xs: '72vh', md: '78vh' },
     overflow: 'hidden',
@@ -31,6 +31,13 @@ export const myGlobeSx = {
     position: 'absolute',
     inset: 0,
     zIndex: 1,
+  },
+
+  typography: { 
+    minHeight: '1.5rem', 
+    transition: 'opacity 120ms ease', 
+    pointerEvents: 'none',
+    userSelect: 'none',
   },
 
   vignette: {

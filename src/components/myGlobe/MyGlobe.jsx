@@ -18,7 +18,7 @@ import GlowBorderParticles from '../ui/GlowBorderParticles';
 export default function Globe({ 
   setSelectedInformation,
 }){ 
-  const [onHoverInformation, setOnHoverInformation] = useState({}); 
+  const [onHoverInformation, setOnHoverInformation] = useState(); 
   const containerRef = useRef(null); 
   const mapRef = useRef(null);
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN; 
@@ -38,8 +38,7 @@ export default function Globe({
 
   }, [setSelectedInformation, setOnHoverInformation]); 
 
-  console.log('onHoverInformation: ', onHoverInformation); 
-  const EXPAND = 200; 
+const EXPAND = 250; 
 return (
     <Box sx={{ position: 'relative' }}>
         <Box
@@ -64,12 +63,13 @@ return (
                 blurEvery={3}
             />
         </Box>
-        <Box>
-        </Box>
         <Box sx={{ ...myGlobeSx.root, position: 'relative', zIndex: 5 }}>
             <Box ref={containerRef} sx={myGlobeSx.map} />
             <Box sx={myGlobeSx.vignette} />
             <Box sx={myGlobeSx.rim} />
+        </Box>
+        <Box>
+           <Typography sx={myGlobeSx.typography}> {onHoverInformation ? `Selected ${onHoverInformation.layerId}` : ''} </Typography>
         </Box>
     </Box>
 )

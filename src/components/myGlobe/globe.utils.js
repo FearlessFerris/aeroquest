@@ -248,7 +248,6 @@ export function attachMapClickHandler(map, LAYERS, onSelectedInformation){
       raw: feature.properties, 
       id: feature.id ?? feature.properties.id, 
     };
-    console.log('Payload: ', payload); 
     onSelectedInformation(payload);
   };
   map.on('click', onClick);
@@ -257,37 +256,38 @@ export function attachMapClickHandler(map, LAYERS, onSelectedInformation){
   }
 }
 
-export function attachMapHoverHandler(map, LAYERS, setOnHoverInformation){ 
-  console.log('Map: ', map); 
-  console.log('LAYERS: ', LAYERS); 
-  console.log('Object.fromEntries:', Object.fromEntries(Object.entries(LAYERS)));
-  console.log('Object.fromEntries with MAP: ', Object.fromEntries(Object.entries(LAYERS).map(([type, cfg]) => [cfg.layer.id, type])));
-  const convertToType = Object.fromEntries(Object.entries(LAYERS).map(([type, cfg])=> [cfg.layer.id, type])); 
-  const layerIds = Object.values(LAYERS).map((value)=> value?.layer?.id).filter(Boolean);
-  
-  const onHover = (e)=>{ 
+
+export function attachMapMouseMoveHandler(map, LAYERS, setOnMouseMoveInformation){ 
+  const layerIds = Object.values(LAYERS).map((value)=> value?.layer?.id).filter(Boolean); 
+  let lastKey = null; 
+  const onMove = (e)=>{ 
     const features = map.queryRenderedFeatures(e.point, { 
-      layers: layerIds,
+      layers: layerIds, 
     });
-    if(!features.length) return; 
-    const feature = features[0]; 
-    const type = convertToType[feature.layer.id];
-    if(!type) return; 
-    const payload = { 
-      type, 
-      layerId: feature.layer.id, 
-      someInformation: 'SomeInformation', 
-      features,
+    if(!features.length){ 
+      if(lastKey !== null){ 
+        lastKey = null; 
+        setOnMouseMoveInformation(null);
+      }
+      return; 
     }
-    setOnHoverInformation((previous)=>({ 
-      ...previous, 
-      payload, 
-    }));
-  }
-  map.on('mousemove', onHover);
-  return()=>{ 
-    map.off('mousemove', onHover);
+    const feature = features[0];
+    const key = `${feature.layer.id}`;
+    if(key === lastKey) return; 
+    lastKey = key; 
+    const payload = { 
+      layerId: feature.layer.id, 
+      source: feature.source, 
+      lngLat: e.lngLat, 
+      raw: feature.properties, 
+      id: feature.id ?? feature.properties.id, 
+    }
+    setOnMouseMoveInformation(payload); 
   }
 
+  map.on('mousemove', onMove); 
+  return ()=>{ 
+    map.off('mousemove', onMove); 
+  }
 }
   
