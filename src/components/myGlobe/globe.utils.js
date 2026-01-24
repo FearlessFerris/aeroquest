@@ -233,12 +233,12 @@ export function attachMapClickHandler(map, LAYERS, onSelectedInformation){
   const convertIdToType = Object.fromEntries(Object.entries(LAYERS).map(([type, cfg]) => [cfg.layer.id, type]));
   const layerIds = Object.values(LAYERS).map((value) => value?.layer?.id);
   const onClick = (e) => { 
-    const features = map.queryRenderedFeatures(e.point,{ // Tricky little bugger, if not using map.on you must create the features property 
-      layers: layerIds,                                  // 
+    const features = map.queryRenderedFeatures(e.point,{
+      layers: layerIds,                                 
     });
     const feature = features?.[0];
     if(!feature?.properties) return; 
-    const type = convertIdToType[feature.layer.id]; 
+    const type = convertIdToType[feature.layer.id];  
     if(!type) return; 
     const payload = { 
       type, 
@@ -248,11 +248,46 @@ export function attachMapClickHandler(map, LAYERS, onSelectedInformation){
       raw: feature.properties, 
       id: feature.id ?? feature.properties.id, 
     };
+    console.log('Payload: ', payload); 
     onSelectedInformation(payload);
   };
   map.on('click', onClick);
   return ()=>{ 
     map.off('click', onClick); 
   }
+}
+
+export function attachMapHoverHandler(map, LAYERS, setOnHoverInformation){ 
+  console.log('Map: ', map); 
+  console.log('LAYERS: ', LAYERS); 
+  console.log('Object.fromEntries:', Object.fromEntries(Object.entries(LAYERS)));
+  console.log('Object.fromEntries with MAP: ', Object.fromEntries(Object.entries(LAYERS).map(([type, cfg]) => [cfg.layer.id, type])));
+  const convertToType = Object.fromEntries(Object.entries(LAYERS).map(([type, cfg])=> [cfg.layer.id, type])); 
+  const layerIds = Object.values(LAYERS).map((value)=> value?.layer?.id).filter(Boolean);
+  
+  const onHover = (e)=>{ 
+    const features = map.queryRenderedFeatures(e.point, { 
+      layers: layerIds,
+    });
+    if(!features.length) return; 
+    const feature = features[0]; 
+    const type = convertToType[feature.layer.id];
+    if(!type) return; 
+    const payload = { 
+      type, 
+      layerId: feature.layer.id, 
+      someInformation: 'SomeInformation', 
+      features,
+    }
+    setOnHoverInformation((previous)=>({ 
+      ...previous, 
+      payload, 
+    }));
+  }
+  map.on('mousemove', onHover);
+  return()=>{ 
+    map.off('mousemove', onHover);
+  }
+
 }
   

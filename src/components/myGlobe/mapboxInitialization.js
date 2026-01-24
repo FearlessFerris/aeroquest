@@ -6,8 +6,7 @@ import mapboxgl from 'mapbox-gl';
 
 
 // Components & Necessary Files 
-// import { handleClickProperties } from './globe.utils';
-import { LAYERS, toFeatureCollection, attachMapClickHandler } from './globe.utils';
+import { LAYERS, toFeatureCollection, attachMapClickHandler, attachMapHoverHandler } from './globe.utils';
 
 
 // Mapbox Initialization 
@@ -16,9 +15,11 @@ export function MapboxInitialization({
     containerEl, 
     informationSource,
     onSelectedInformation,
+    onSetHoverInformation
 }){ 
     mapboxgl.accessToken = accessToken; 
     let detachMapClickHandler;
+    let detachMapHoverHandler; 
     const map = new mapboxgl.Map({ 
         container: containerEl, 
         center: [-90, 34],
@@ -45,11 +46,13 @@ export function MapboxInitialization({
     });
 
     detachMapClickHandler = attachMapClickHandler(map, LAYERS, onSelectedInformation); 
+    detachMapHoverHandler = attachMapHoverHandler(map, LAYERS, onSetHoverInformation); 
 
-    return ()=>{ 
-      if(detachMapClickHandler){ 
-        detachMapClickHandler();
-        map.remove(); 
-      }
+    const clean = ()=>{ 
+      if(detachMapClickHandler) detachMapClickHandler(); 
+      if(detachMapHoverHandler) detachMapHoverHandler(); 
+      map.remove(); 
     }
+    return{map, clean}
 }
+
