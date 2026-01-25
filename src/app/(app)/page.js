@@ -13,7 +13,7 @@ export default function AppHomePage() {
 
   return (
     <Box sx = {{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-      <MyGlobe setSelectedInformation={setSelectedInformation}/> 
+      <MyGlobe selectedInformation={selectedInformation} setSelectedInformation={setSelectedInformation}/> 
 
       {/* <GlassCard
         title = { selectedFlight ? 'Flight Selected' : 'Explore Live Airspace' }

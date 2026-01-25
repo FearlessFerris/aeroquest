@@ -10,49 +10,48 @@ import { LAYERS, toFeatureCollection, attachMapClickHandler, attachMapMouseMoveH
 
 
 // Mapbox Initialization 
-export function MapboxInitialization({ 
-    accessToken, 
-    containerEl, 
+export function MapboxInitialization({
+    accessToken,
+    containerEl,
     informationSource,
     onSelectedInformation,
     onSetHoverInformation
-}){ 
-    mapboxgl.accessToken = accessToken; 
+}) {
+    mapboxgl.accessToken = accessToken;
     let detachMapClickHandler;
-    let detachMapMouseMoveHandler; 
-    const map = new mapboxgl.Map({ 
-        container: containerEl, 
+    let detachMapMouseMoveHandler;
+    const map = new mapboxgl.Map({
+        container: containerEl,
         center: [-90, 34],
         zoom: 4,
         style: 'mapbox://styles/mapbox/satellite-streets-v12',
-        projection: 'globe', 
-        antialias: true, 
+        projection: 'globe',
+        antialias: true,
         cooperativeGestures: false,
-    }); 
-
-    map.on('style.load', ()=>{ 
-      Object.entries(LAYERS).forEach(([key,cfg])=>{ 
-        const geojson = toFeatureCollection(informationSource?.[key]); 
-        if(!map.getSource(cfg.sourceId)){ 
-          map.addSource(cfg.sourceId,{ 
-            type: 'geojson', 
-            data: geojson, 
-          });
-        }
-        if(!map.getLayer(cfg.layer.id)){ 
-          map.addLayer(cfg.layer);
-        }
-      });
     });
 
-    detachMapClickHandler = attachMapClickHandler(map, LAYERS, onSelectedInformation); 
-    detachMapMouseMoveHandler = attachMapMouseMoveHandler(map, LAYERS, onSetHoverInformation); 
+    map.on('style.load', () => {
+        Object.entries(LAYERS).forEach(([key, cfg]) => {
+            const geojson = toFeatureCollection(informationSource?.[key]);
+            if (!map.getSource(cfg.sourceId)) {
+                map.addSource(cfg.sourceId, { type: 'geojson', data: geojson });
+            } else {
+                map.getSource(cfg.sourceId).setData(geojson);
+            }
+            const layerDef = { ...cfg.layer, id: cfg.layerId, source: cfg.sourceId };
+            if (!map.getLayer(cfg.layerId)) {
+                map.addLayer(layerDef);
+            }
+        });
+    });
 
-    const clean = ()=>{ 
-      if(detachMapClickHandler) detachMapClickHandler(); 
-      if(detachMapMouseMoveHandler) detachMapMouseMoveHandler(); 
-      map.remove(); 
+    detachMapClickHandler = attachMapClickHandler(map, LAYERS, onSelectedInformation);
+    detachMapMouseMoveHandler = attachMapMouseMoveHandler(map, LAYERS, onSetHoverInformation);
+
+    const clean = () => {
+        if (detachMapClickHandler) detachMapClickHandler();
+        if (detachMapMouseMoveHandler) detachMapMouseMoveHandler();
+        map.remove();
     }
-    return{map, clean}
+    return { map, clean }
 }
-

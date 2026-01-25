@@ -216,6 +216,28 @@ export const toFeatureCollection = (input)=>{
     }
 }
 
+export function toTitleLabel(key = '') {
+  const s = String(key)
+    .replace(/[_-]+/g, ' ')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .trim();
+  if (!s) return '';
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+export function formatValue(key, val) {
+  if (val === null || val === undefined || val === '') return '—';
+  if (Array.isArray(val)) return val.filter(Boolean).join(', ');
+  if (typeof val === 'object') return JSON.stringify(val);
+  if (typeof val === 'number') {
+    const k = String(key).toLowerCase();
+    if (k.includes('speed')) return `${Math.round(val).toLocaleString()} kts`;
+    if (k.includes('alt')) return `${Math.round(val).toLocaleString()} ft`;
+    if (k.includes('lat') || k.includes('lon')) return val.toFixed(4);
+    return val.toLocaleString();
+  }
+  return String(val);
+}
 
 export function updateMapInformationSource(map, informationSource) {
   if (!map || !informationSource) return;
@@ -256,39 +278,34 @@ export function attachMapClickHandler(map, LAYERS, onSelectedInformation){
     map.off('click', onClick); 
   }
 }
-
-
-export function attachMapMouseMoveHandler(map, LAYERS, setOnMouseMoveInformation){ 
-  const layerIds = Object.values(LAYERS).map((value)=> value?.layer?.id).filter(Boolean); 
-  let lastKey = null; 
-  const onMove = (e)=>{ 
-    const features = map.queryRenderedFeatures(e.point, { 
-      layers: layerIds, 
-    });
-    if(!features.length){ 
-      if(lastKey !== null){ 
-        lastKey = null; 
+  
+export function attachMapMouseMoveHandler(map, LAYERS, setOnMouseMoveInformation) {
+  const allLayerIds = Object.values(LAYERS).map((v) => v.layerId).filter(Boolean);
+  let lastKey = null;
+  const onMove = (e) => {
+    const layerIds = allLayerIds.filter((id) => map.getLayer(id));
+    if (!layerIds.length) return;
+    const features = map.queryRenderedFeatures(e.point, { layers: layerIds });
+    if (!features.length) {
+      if (lastKey !== null) {
+        lastKey = null;
         setOnMouseMoveInformation(null);
       }
-      return; 
+      return;
     }
     const feature = features[0];
-    const key = `${feature.layer.id}`;
-    if(key === lastKey) return; 
-    lastKey = key; 
-    const payload = { 
-      layerId: feature.layer.id, 
-      source: feature.source, 
-      lngLat: e.lngLat, 
-      raw: feature.properties, 
-      id: feature.id ?? feature.properties.id, 
-    }
-    setOnMouseMoveInformation(payload); 
-  }
-
-  map.on('mousemove', onMove); 
-  return ()=>{ 
-    map.off('mousemove', onMove); 
-  }
+    const key = `${feature.layer.id}:${feature.id ?? feature.properties?.id ?? ''}`;
+    if (key === lastKey) return;
+    lastKey = key;
+    setOnMouseMoveInformation({
+      layerId: feature.layer.id,
+      source: feature.source,
+      lngLat: e.lngLat,
+      raw: feature.properties,
+      id: feature.id ?? feature.properties?.id,
+    });
+  };
+  map.on('mousemove', onMove);
+  return () => map.off('mousemove', onMove);
 }
-  
+

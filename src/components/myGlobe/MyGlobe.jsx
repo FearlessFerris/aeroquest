@@ -12,10 +12,12 @@ import { MapboxInitialization } from './mapboxInitialization';
 import { updateMapInformationSource } from './mapbox.utils';
 import { LAYERS, informationSourceJSON } from './globe.utils';
 import GlowBorderParticles from '../ui/GlowBorderParticles';
+import GloveOverlay from './GlobeOverlay';
 
 
 // Globe Component
 export default function Globe({ 
+  selectedInformation, 
   setSelectedInformation,
 }){ 
   const [onHoverInformation, setOnHoverInformation] = useState(); 
@@ -66,9 +68,11 @@ return (
             <Box ref={containerRef} sx={myGlobeSx.map} />
             <Box sx={myGlobeSx.vignette} />
             <Box sx={myGlobeSx.rim} />
-        </Box>
         <Box>
+           <GloveOverlay informationPayload={selectedInformation}/>
            <Typography sx={myGlobeSx.typography}> {onHoverInformation ? `Selected ${onHoverInformation.layerId}` : ''} </Typography>
+           <Typography sx={myGlobeSx.typography}> {selectedInformation ? `Selected ${selectedInformation?.raw?.airportName}`: ''}</Typography>
+        </Box>
         </Box>
     </Box>
 )
