@@ -248,6 +248,7 @@ export function attachMapClickHandler(map, LAYERS, onSelectedInformation){
       raw: feature.properties, 
       id: feature.id ?? feature.properties.id, 
     };
+    console.log(payload); 
     onSelectedInformation(payload);
   };
   map.on('click', onClick);

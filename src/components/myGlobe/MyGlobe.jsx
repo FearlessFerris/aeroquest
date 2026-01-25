@@ -22,8 +22,8 @@ export default function Globe({
   const containerRef = useRef(null); 
   const mapRef = useRef(null);
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN; 
-  if(!token) return; 
   useEffect(()=>{ 
+    if(!token || !containerRef.current) return; 
     const {map, clean} = MapboxInitialization({ 
       accessToken: token, 
       containerEl: containerRef.current, 
@@ -31,7 +31,6 @@ export default function Globe({
       onSelectedInformation: setSelectedInformation, 
       onSetHoverInformation: setOnHoverInformation, 
     });
-    
     
     mapRef.current = map;
     return clean; 
