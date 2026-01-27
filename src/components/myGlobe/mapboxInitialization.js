@@ -34,11 +34,18 @@ export function MapboxInitialization({
         Object.entries(LAYERS).forEach(([key, cfg]) => {
             const geojson = toFeatureCollection(informationSource?.[key]);
             if (!map.getSource(cfg.sourceId)) {
-                map.addSource(cfg.sourceId, { type: 'geojson', data: geojson });
+                map.addSource(cfg.sourceId, { 
+                    type: 'geojson', 
+                    data: geojson 
+                });
             } else {
                 map.getSource(cfg.sourceId).setData(geojson);
             }
-            const layerDef = { ...cfg.layer, id: cfg.layerId, source: cfg.sourceId };
+            const layerDef = { 
+                ...cfg.layer, 
+                id: cfg.layerId, 
+                source: cfg.sourceId 
+            };
             if (!map.getLayer(cfg.layerId)) {
                 map.addLayer(layerDef);
             }
