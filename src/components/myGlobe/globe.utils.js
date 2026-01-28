@@ -250,7 +250,7 @@ export function updateMapInformationSource(map, informationSource) {
     src.setData(fc);
   });
 }
-
+// s
 export function attachMapClickHandler(map, LAYERS, onSelectedInformation){ 
   const convertIdToType = Object.fromEntries(Object.entries(LAYERS).map(([type, cfg]) => [cfg.layer.id, type]));
   const layerIds = Object.values(LAYERS).map((value) => value?.layer?.id);
@@ -259,7 +259,10 @@ export function attachMapClickHandler(map, LAYERS, onSelectedInformation){
       layers: layerIds,                                 
     });
     const feature = features?.[0];
-    if(!feature?.properties) return; 
+    if(!feature?.properties){
+      onSelectedInformation(null); 
+      return; 
+    }  
     const type = convertIdToType[feature.layer.id];  
     if(!type) return; 
     const payload = { 
