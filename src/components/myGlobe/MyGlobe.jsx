@@ -69,7 +69,7 @@ return (
             <Box sx={myGlobeSx.vignette} />
             <Box sx={myGlobeSx.rim} />
         <Box>
-           <GloveOverlay informationPayload={selectedInformation}/>
+           <GloveOverlay informationPayload={selectedInformation} onSetHoverInformation={onHoverInformation}/>
            <Typography sx={myGlobeSx.typography}> {onHoverInformation ? `Selected ${onHoverInformation.layerId}` : ''} </Typography>
            <Typography sx={myGlobeSx.typography}> {selectedInformation ? `Selected ${selectedInformation?.raw?.airportName}`: ''}</Typography>
         </Box>

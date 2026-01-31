@@ -9,39 +9,53 @@ import { useMemo } from 'react';
 
 // // Components & Necessary Files 
 import { toTitleLabel, formatValue } from './globe.utils';
+import { myGlobeSx } from '../../styles/components/myGlobe.styles'; 
+
 
 // // GlobeOverlay Component
-export default function GloveOverlay({ informationPayload }) {
-  const rows = useMemo(() => {
-    if (!informationPayload?.raw) return [];
-    return Object.entries(informationPayload.raw).map(([key, val]) => ({
-      key,
-      label: toTitleLabel(key),
-      value: formatValue(key, val),
+export default function GloveOverlay({ informationPayload, onSetHoverInformation }) {
+  const rows = useMemo(()=>{ 
+    if(!informationPayload?.raw && !onSetHoverInformation?.raw){ 
+      console.log('There is no information payload');
+      return []; 
+    }
+    return Object.entries(informationPayload?.raw || onSetHoverInformation?.raw).map(([key, val])=>({ 
+      key, 
+      label: toTitleLabel(key), 
+      value: formatValue(key, val) 
     }));
-  }, [informationPayload]);
+  },[informationPayload, onSetHoverInformation]); 
+  // const rows = useMemo(() => {
+  //   if (!informationPayload?.raw && onSetHoverInformation?.raw) return [];
+    
+  //   return Object.entries(informationPayload.raw).map(([key, val]) => ({
+  //     key,
+  //     label: toTitleLabel(key),
+  //     value: formatValue(key, val),
+  //   }));
+  // }, [informationPayload]);
 
-  if (!informationPayload) return null;
+  // if (!informationPayload) return null;
 
   return (
     <Box
-      sx={{
-        position: 'absolute',
-        top: '2rem',
-        left: '1rem',
-        zIndex: 6,
-        p: '1rem',
-        borderRadius: '1rem',
-        bgcolor: 'rgba(0,0,0,0.35)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(245,233,207,0.15)',
-        maxWidth: '28rem',
-      }}
+      sx={{...myGlobeSx.overlayCard}}
     >
-      <Typography sx={{ fontSize: '1rem', fontWeight: 700, mb: '0.5rem' }}>
-        {toTitleLabel(informationPayload.type || 'Details')}
-      </Typography>
+      
+      { informationPayload?.raw ?( 
 
+        
+        
+        <Typography sx={{ fontSize: '1rem', fontWeight: 700, mb: '0.5rem' }}>
+        {toTitleLabel(informationPayload?.raw.featureType)}
+      </Typography>
+        ): onSetHoverInformation?.raw ?( 
+          <Typography sx={{ fontSize: '1rem', fontWeight: 700, mb: '0.5rem' }}>
+        {toTitleLabel(onSetHoverInformation?.raw.featureType)}
+      </Typography>
+        ): null}
+      
+      
       <Box sx={{ display: 'grid', gap: '0.35rem' }}>
         {rows.map((row) => (
           <Box
@@ -49,7 +63,7 @@ export default function GloveOverlay({ informationPayload }) {
             sx={{
               display: 'grid',
               gridTemplateColumns: '10rem 1fr',
-              gap: '0.75rem',
+              gap: '0.5rem',
               alignItems: 'baseline',
             }}
           >

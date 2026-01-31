@@ -251,7 +251,6 @@ export function updateMapInformationSource(map, informationSource) {
   });
 }
 
-// Saving some information 
 export function attachMapClickHandler(map, LAYERS, onSelectedInformation){ 
   const convertIdToType = Object.fromEntries(Object.entries(LAYERS).map(([type, cfg]) => [cfg.layer.id, type]));
   const layerIds = Object.values(LAYERS).map((value) => value?.layer?.id);
