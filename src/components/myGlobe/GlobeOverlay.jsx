@@ -4,7 +4,7 @@
 
 // // Dependencies 
 import { Box, Typography } from '@mui/material';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 
 // // Components & Necessary Files 
@@ -14,11 +14,11 @@ import { myGlobeSx } from '../../styles/components/myGlobe.styles';
 
 // // GlobeOverlay Component
 export default function GloveOverlay({ informationPayload, onSetHoverInformation }) {
+  const [interaction, setInteraction] = useState({ 
+    // 1:01.56 
+  })
   const rows = useMemo(()=>{ 
-    if(!informationPayload?.raw && !onSetHoverInformation?.raw){ 
-      console.log('There is no information payload');
-      return []; 
-    }
+    if(!informationPayload?.raw && !onSetHoverInformation?.raw) return []; 
     return Object.entries(informationPayload?.raw || onSetHoverInformation?.raw).map(([key, val])=>({ 
       key, 
       label: toTitleLabel(key), 
