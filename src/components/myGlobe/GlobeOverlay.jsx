@@ -15,7 +15,7 @@ import { myGlobeSx } from '../../styles/components/myGlobe.styles';
 // // GlobeOverlay Component
 export default function GloveOverlay({ informationPayload, onSetHoverInformation }) {
   const [interaction, setInteraction] = useState({ 
-    // 1:01.56 
+    
   })
   const rows = useMemo(()=>{ 
     if(!informationPayload?.raw && !onSetHoverInformation?.raw) return []; 
@@ -25,47 +25,24 @@ export default function GloveOverlay({ informationPayload, onSetHoverInformation
       value: formatValue(key, val) 
     }));
   },[informationPayload, onSetHoverInformation]); 
-  // const rows = useMemo(() => {
-  //   if (!informationPayload?.raw && onSetHoverInformation?.raw) return [];
-    
-  //   return Object.entries(informationPayload.raw).map(([key, val]) => ({
-  //     key,
-  //     label: toTitleLabel(key),
-  //     value: formatValue(key, val),
-  //   }));
-  // }, [informationPayload]);
-
-  // if (!informationPayload) return null;
 
   return (
-    <Box
-      sx={{...myGlobeSx.overlayCard}}
-    >
-      
-      { informationPayload?.raw ?( 
+    <>
+    { informationPayload?.raw ? ( 
 
-        
-        
-        <Typography sx={{ fontSize: '1rem', fontWeight: 700, mb: '0.5rem' }}>
-        {toTitleLabel(informationPayload?.raw.featureType)}
-      </Typography>
-        ): onSetHoverInformation?.raw ?( 
-          <Typography sx={{ fontSize: '1rem', fontWeight: 700, mb: '0.5rem' }}>
-        {toTitleLabel(onSetHoverInformation?.raw.featureType)}
-      </Typography>
-        ): null}
-      
-      
+      <Box
+      sx={{...myGlobeSx.overlayCard}}
+      >
       <Box sx={{ display: 'grid', gap: '0.35rem' }}>
         {rows.map((row) => (
           <Box
-            key={row.key}
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: '10rem 1fr',
-              gap: '0.5rem',
-              alignItems: 'baseline',
-            }}
+          key={row.key}
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: '10rem 1fr',
+            gap: '0.5rem',
+            alignItems: 'baseline',
+          }}
           >
             <Typography sx={{ opacity: 0.75, fontSize: '0.9rem' }}>
               {row.label}
@@ -77,5 +54,7 @@ export default function GloveOverlay({ informationPayload, onSetHoverInformation
         ))}
       </Box>
     </Box>
+    )}
+    </>
   );
 }
