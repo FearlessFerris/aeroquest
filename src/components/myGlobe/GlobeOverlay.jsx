@@ -26,6 +26,7 @@ export default function GloveOverlay({ informationPayload, onSetHoverInformation
     }));
   },[informationPayload, onSetHoverInformation]); 
 
+  // 
   return (
     <>
     { informationPayload?.raw ? ( 
