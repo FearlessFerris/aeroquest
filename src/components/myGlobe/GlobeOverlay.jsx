@@ -29,7 +29,7 @@ export default function GlobeOverlay({ informationPayload, onSetHoverInformation
 
     console.log(rows);
     console.log(onSetHoverInformation); 
-
+// 
     return (
         <>
             {informationPayload?.raw ? (
